@@ -269,6 +269,14 @@ This process continues until the error is below a defined threshold or a cost li
 
 ---
 
+### Bruteforcing is Resource-Intensive
+
+The process of embedding inversion, particularly through bruteforcing, can be computationally expensive and time-consuming. It involves generating a large number of hypotheses and calculating the error between the target embedding and the embedding of each hypothesis. This iterative process continues until a satisfactory approximation of the target text is achieved or a predefined cost limit is reached.
+
+The resource-intensive nature of bruteforcing can pose challenges, especially when dealing with large datasets or complex models. It requires significant computational power and can lead to increased costs and longer processing times. Therefore, it's crucial to find ways to optimize this process and make it more efficient.
+
+---
+
 ## Supercharging with Modal
 
 ### What is Modal?
