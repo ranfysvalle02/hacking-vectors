@@ -8,7 +8,7 @@
 
 In the rapidly evolving field of natural language processing (NLP), embeddings have become indispensable. These numerical representations of text capture semantic meanings, enabling machines to process and understand human language more effectively. However, as with many technological advancements, embeddings come with their own set of challenges, particularly concerning privacy.
 
-This blog post explores the intriguing process of recovering text from embeddings, the associated privacy risks in dense retrieval systems, and how to mitigate these risks using embedding transformation techniques. We'll also delve into how Modal, a powerful cloud platform, can revolutionize AI development by simplifying and accelerating these complex tasks.
+This blog post explores the intriguing process of recovering text from embeddings, the associated privacy risks in dense retrieval systems, and how to mitigate these risks using embedding transformation techniques.
 
 ## Table of Contents
 
