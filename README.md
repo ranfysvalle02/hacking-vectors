@@ -2,7 +2,10 @@
 
 ![vec2txt.png](vec2txt.png)
 
-Inspired by: https://github.com/SurfinScott/semantic-vector-clustering/
+Inspired by: 
+
+- https://github.com/SurfinScott/semantic-vector-clustering/
+- https://www.mongodb.com/developer/products/atlas/discover-latent-semantic-structure-with-vector-clustering/
 
 “Given access to a target embedding and query access to an embedding model, the system aims to iteratively generate hypotheses to reach the target."
 
