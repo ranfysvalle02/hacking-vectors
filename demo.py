@@ -146,7 +146,7 @@ def demo():
     logging.info("%s",str(BEST_GUESSES))
 
 """
-2024-11-14 02:31:00.371 [INFO] CHAT: User input is last iterative guess of an unknown text string and its vector ERROR from the unknown text.
+2024-11-14 02:46:46.415 [INFO] CHAT: User input is last iterative guess of an unknown text string and its vector ERROR from the unknown text.
     Determine a better text string having a lower vector ERROR and write only that string in English as your entire output.
     The goal is to accurately guess the mystery text. 
     This is a game of guess-and-check. 
@@ -165,21 +165,20 @@ def demo():
     
 
 BEST_GUESSES:
-['ERROR 0.8794, ""Be Aware""', 'ERROR 1.0001, "Be"']
+['ERROR 0.9532, ""Be Prepared""', 'ERROR 0.8794, ""Be Aware""', 'ERROR 0.9047, ""Be Cautious""']
 
 RECENT_PRIOR_GUESSES:
-['ERROR 0.9052, ""Be Aware of One\'s Self""', 'ERROR 0.8794, ""Be Aware""', 'ERROR 1.0964, ""Beyond""', 'ERROR 1.0676, ""Be Beneath""', 'ERROR 0.9483, ""Be Aware of""', 'ERROR 1.1134, ""Beneath Reason""', 'ERROR 1.0001, "Be"', 'ERROR 1.0588, 
-""Beyond Reason""']
+['ERROR 0.9047, ""Be Cautious""', 'ERROR 1.0131, "Best Be Now"', 'ERROR 0.9665, ""Be Present""', 'ERROR 1.0001, "Be"', 'ERROR 1.0159, ""Be Now""', 'ERROR 1.0228, ""Best Guess: Best Be Here""', 'ERROR 1.0358, "Be Now"', 'ERROR 0.9483, ""Be Aware 
+of""']
 
 ERROR 0.8519, ""Be Aware of Oneself""
 
-2024-11-14 02:31:00.671 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
-2024-11-14 02:31:00.674 [INFO]    19 "Be Mindful of Yourself" ERROR 0.8519, ""Be Aware of Oneself""
-2024-11-14 02:31:00.689 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/embed "HTTP/1.1 200 OK"
-2024-11-14 02:31:00.692 [INFO]    20 "Be Mindful of Yourself"
-2024-11-14 02:31:00.693 [INFO] >>> New best text: ""Be Mindful of Yourself"", error: 0.562551
-2024-11-14 02:31:00.694 [INFO] ['ERROR 0.5626, ""Be Mindful of Yourself""', 'ERROR 0.8519, ""Be Aware of Oneself""', 'ERROR 0.8794, ""Be Aware""']
+2024-11-14 02:46:46.692 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2024-11-14 02:46:46.693 [INFO]    15 "Be Mindful" ERROR 0.8519, ""Be Aware of Oneself""
+2024-11-14 02:46:46.708 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/embed "HTTP/1.1 200 OK"
+2024-11-14 02:46:46.710 [INFO]    16 "Be Mindful"
+2024-11-14 02:46:46.711 [INFO] >>> New best text: ""Be Mindful"", error: 0.375072
+2024-11-14 02:46:46.711 [INFO] ['ERROR 0.3751, ""Be Mindful""', 'ERROR 0.8519, ""Be Aware of Oneself""', 'ERROR 0.8794, ""Be Aware""']
 Stopping app - local entrypoint completed.
-✓ App completed. View run at https://modal.com/apps/ranfysvalle02/main/ap-HPVKrZOQsTNODxLV4vsaTx
+✓ App completed. View run at https://modal.com/apps/ranfysvalle02/main/ap-jdrk94SitoHaDA4OoIlYmG
 """
-
