@@ -3,9 +3,6 @@ import logging
 import numpy as np
 import ollama
 from langchain_ollama import OllamaEmbeddings
-import modal
-app = modal.App("bruteforce-embeddings")
-@app.local_entrypoint()
 def demo():
     desiredModel = 'llama3.2:3b'
     embeddings = OllamaEmbeddings(
@@ -145,8 +142,10 @@ def demo():
 
     logging.info("%s",str(BEST_GUESSES))
 
+demo()
+
 """
-2024-11-14 02:49:03.208 [INFO] CHAT: User input is last iterative guess of an unknown text string and its vector ERROR from the unknown text.
+2024-11-14 03:01:01.446 [INFO] CHAT: User input is last iterative guess of an unknown text string and its vector ERROR from the unknown text.
     Determine a better text string having a lower vector ERROR and write only that string in English as your entire output.
     The goal is to accurately guess the mystery text. 
     This is a game of guess-and-check. 
@@ -165,19 +164,17 @@ def demo():
     
 
 BEST_GUESSES:
-['ERROR 0.8173, ""Be Focused""', 'ERROR 0.8816, ""Be Carefree""', 'ERROR 0.9171, ""Be Joyful""']
+['ERROR 0.8794, ""Be aware""', 'ERROR 0.9279, ""Be kind""', 'ERROR 0.9480, ""Be respectful""']
 
 RECENT_PRIOR_GUESSES:
-['ERROR 0.8173, ""Be Focused""', 'ERROR 1.0109, ""Be Free""', 'ERROR 0.9692, ""Be Jubilant""', 'ERROR 1.0103, ""Be Excited""', 'ERROR 1.0001, "Be"', 'ERROR 0.9699, ""Be Optimistic""', 'ERROR 1.0017, ""Being""', 'ERROR 0.9501, ""Be Motivated""']
+['ERROR 0.9355, ""Be careful""', 'ERROR 0.9904, ""Be thankful""', 'ERROR 0.9809, ""Be courteous""', 'ERROR 0.9850, ""Be polite""', 'ERROR 0.9910, "Be happy"', 'ERROR 0.9047, ""Be cautious""', 'ERROR 0.9480, ""Be respectful""']
 
-ERROR 0.8496, ""Be Concentrated""
+ERROR 0.8794, ""Be aware""
 
-2024-11-14 02:49:03.484 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
-2024-11-14 02:49:03.488 [INFO]    43 "Be Mindful" ERROR 0.8496, ""Be Concentrated""
-2024-11-14 02:49:03.502 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/embed "HTTP/1.1 200 OK"
-2024-11-14 02:49:03.507 [INFO]    44 "Be Mindful"
-2024-11-14 02:49:03.508 [INFO] >>> New best text: ""Be Mindful"", error: 0.375072
-2024-11-14 02:49:03.508 [INFO] ['ERROR 0.3751, ""Be Mindful""', 'ERROR 0.8173, ""Be Focused""', 'ERROR 0.8816, ""Be Carefree""']
-Stopping app - local entrypoint completed.
-✓ App completed. View run at https://modal.com/apps/ranfysvalle02/main/ap-x---------------
+2024-11-14 03:01:01.705 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2024-11-14 03:01:01.707 [INFO]    57 "Be mindful" ERROR 0.8794, ""Be aware""
+2024-11-14 03:01:01.721 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/embed "HTTP/1.1 200 OK"
+2024-11-14 03:01:01.723 [INFO]    58 "Be mindful"
+2024-11-14 03:01:01.724 [INFO] >>> New best text: ""Be mindful"", error: 0.375072
+2024-11-14 03:01:01.724 [INFO] ['ERROR 0.3751, ""Be mindful""', 'ERROR 0.8794, ""Be aware""', 'ERROR 0.9279, ""Be kind""']
 """
