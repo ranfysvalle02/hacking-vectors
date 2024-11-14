@@ -77,7 +77,7 @@ def demo():
 
     [RESPONSE CRITERIA]
     - DO NOT REPEAT YOURSELF, CONSIDER `RECENT_PRIOR_GUESSES` and `BEST_GUESSES` PROVIDED IN [context] and `clue` when formulating your answer.
-    - RESPOND WITH COMPLETE GUESS.
+    - RESPOND WITH COMPLETE GUESS. 2 WORD MAX.
     - DO NOT REPEAT ANY OF THE `BEST_GUESSES` AND `RECENT_PRIOR_GUESSES` PROVIDED IN [context].
     - DO NOT REPEAT YOURSELF, CONSIDER `RECENT_PRIOR_GUESSES` and `BEST_GUESSES` and `clue` when formulating your answer.
     [/RESPONSE CRITERIA]
@@ -146,7 +146,7 @@ def demo():
     logging.info("%s",str(BEST_GUESSES))
 
 """
-2024-11-14 02:46:46.415 [INFO] CHAT: User input is last iterative guess of an unknown text string and its vector ERROR from the unknown text.
+2024-11-14 02:49:03.208 [INFO] CHAT: User input is last iterative guess of an unknown text string and its vector ERROR from the unknown text.
     Determine a better text string having a lower vector ERROR and write only that string in English as your entire output.
     The goal is to accurately guess the mystery text. 
     This is a game of guess-and-check. 
@@ -158,27 +158,26 @@ def demo():
 
     [RESPONSE CRITERIA]
     - DO NOT REPEAT YOURSELF, CONSIDER `RECENT_PRIOR_GUESSES` and `BEST_GUESSES` PROVIDED IN [context] and `clue` when formulating your answer.
-    - RESPOND WITH COMPLETE GUESS.
+    - RESPOND WITH COMPLETE GUESS. 2 WORD MAX.
     - DO NOT REPEAT ANY OF THE `BEST_GUESSES` AND `RECENT_PRIOR_GUESSES` PROVIDED IN [context].
     - DO NOT REPEAT YOURSELF, CONSIDER `RECENT_PRIOR_GUESSES` and `BEST_GUESSES` and `clue` when formulating your answer.
     [/RESPONSE CRITERIA]
     
 
 BEST_GUESSES:
-['ERROR 0.9532, ""Be Prepared""', 'ERROR 0.8794, ""Be Aware""', 'ERROR 0.9047, ""Be Cautious""']
+['ERROR 0.8173, ""Be Focused""', 'ERROR 0.8816, ""Be Carefree""', 'ERROR 0.9171, ""Be Joyful""']
 
 RECENT_PRIOR_GUESSES:
-['ERROR 0.9047, ""Be Cautious""', 'ERROR 1.0131, "Best Be Now"', 'ERROR 0.9665, ""Be Present""', 'ERROR 1.0001, "Be"', 'ERROR 1.0159, ""Be Now""', 'ERROR 1.0228, ""Best Guess: Best Be Here""', 'ERROR 1.0358, "Be Now"', 'ERROR 0.9483, ""Be Aware 
-of""']
+['ERROR 0.8173, ""Be Focused""', 'ERROR 1.0109, ""Be Free""', 'ERROR 0.9692, ""Be Jubilant""', 'ERROR 1.0103, ""Be Excited""', 'ERROR 1.0001, "Be"', 'ERROR 0.9699, ""Be Optimistic""', 'ERROR 1.0017, ""Being""', 'ERROR 0.9501, ""Be Motivated""']
 
-ERROR 0.8519, ""Be Aware of Oneself""
+ERROR 0.8496, ""Be Concentrated""
 
-2024-11-14 02:46:46.692 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
-2024-11-14 02:46:46.693 [INFO]    15 "Be Mindful" ERROR 0.8519, ""Be Aware of Oneself""
-2024-11-14 02:46:46.708 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/embed "HTTP/1.1 200 OK"
-2024-11-14 02:46:46.710 [INFO]    16 "Be Mindful"
-2024-11-14 02:46:46.711 [INFO] >>> New best text: ""Be Mindful"", error: 0.375072
-2024-11-14 02:46:46.711 [INFO] ['ERROR 0.3751, ""Be Mindful""', 'ERROR 0.8519, ""Be Aware of Oneself""', 'ERROR 0.8794, ""Be Aware""']
+2024-11-14 02:49:03.484 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2024-11-14 02:49:03.488 [INFO]    43 "Be Mindful" ERROR 0.8496, ""Be Concentrated""
+2024-11-14 02:49:03.502 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/embed "HTTP/1.1 200 OK"
+2024-11-14 02:49:03.507 [INFO]    44 "Be Mindful"
+2024-11-14 02:49:03.508 [INFO] >>> New best text: ""Be Mindful"", error: 0.375072
+2024-11-14 02:49:03.508 [INFO] ['ERROR 0.3751, ""Be Mindful""', 'ERROR 0.8173, ""Be Focused""', 'ERROR 0.8816, ""Be Carefree""']
 Stopping app - local entrypoint completed.
-✓ App completed. View run at https://modal.com/apps/ranfysvalle02/main/ap-jdrk94SitoHaDA4OoIlYmG
+✓ App completed. View run at https://modal.com/apps/ranfysvalle02/main/ap-x---------------
 """
