@@ -1,0 +1,430 @@
+2024-11-14 01:54:28.636 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/embed "HTTP/1.1 200 OK"
+2024-11-14 01:54:28.653 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/embed "HTTP/1.1 200 OK"
+2024-11-14 01:54:28.653 [INFO]     1 Be
+2024-11-14 01:54:28.653 [INFO] >>> New best text: "Be", error: 1.000094
+2024-11-14 01:54:28.653 [INFO] CHAT: User input is last iterative guess of an unknown text string and its vector ERROR from the unknown text.
+Determine a better text string having a lower vector ERROR and write only that string in English as your entire output.
+The goal is to accurately guess the mystery text. 
+This is a game of guess-and-check. 
+
+
+[clue]
+TWO WORDS; CLUE: FIRST WORD IS `Be`; SECOND WORD YOU HAVE TO GUESS. RESPOND WITH EXACTLY TWO WORDS.
+[/clue]
+
+[RESPONSE CRITERIA]
+- DO NOT REPEAT YOURSELF, CONSIDER `RECENT_PRIOR_GUESSES` and `BEST_GUESSES` PROVIDED IN [context] and `clue` when formulating your answer.
+- RESPOND WITH COMPLETE GUESS.
+- DO NOT REPEAT ANY OF THE `BEST_GUESSES` AND `RECENT_PRIOR_GUESSES` PROVIDED IN [context].
+- DO NOT REPEAT YOURSELF, CONSIDER `RECENT_PRIOR_GUESSES` and `BEST_GUESSES` and `clue` when formulating your answer.
+[/RESPONSE CRITERIA]
+
+
+BEST_GUESSES:
+[]
+
+RECENT_PRIOR_GUESSES:
+[]
+
+ERROR 1.0001, "Be"
+
+2024-11-14 01:54:29.028 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2024-11-14 01:54:29.029 [INFO]     1 Be happy ERROR 1.0001, "Be"
+2024-11-14 01:54:29.045 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/embed "HTTP/1.1 200 OK"
+2024-11-14 01:54:29.047 [INFO]     2 Be happy
+2024-11-14 01:54:29.047 [INFO] >>> New best text: "Be happy", error: 0.990958
+2024-11-14 01:54:29.048 [INFO] CHAT: User input is last iterative guess of an unknown text string and its vector ERROR from the unknown text.
+Determine a better text string having a lower vector ERROR and write only that string in English as your entire output.
+The goal is to accurately guess the mystery text. 
+This is a game of guess-and-check. 
+
+
+[clue]
+TWO WORDS; CLUE: FIRST WORD IS `Be`; SECOND WORD YOU HAVE TO GUESS. RESPOND WITH EXACTLY TWO WORDS.
+[/clue]
+
+[RESPONSE CRITERIA]
+- DO NOT REPEAT YOURSELF, CONSIDER `RECENT_PRIOR_GUESSES` and `BEST_GUESSES` PROVIDED IN [context] and `clue` when formulating your answer.
+- RESPOND WITH COMPLETE GUESS.
+- DO NOT REPEAT ANY OF THE `BEST_GUESSES` AND `RECENT_PRIOR_GUESSES` PROVIDED IN [context].
+- DO NOT REPEAT YOURSELF, CONSIDER `RECENT_PRIOR_GUESSES` and `BEST_GUESSES` and `clue` when formulating your answer.
+[/RESPONSE CRITERIA]
+
+
+BEST_GUESSES:
+['ERROR 1.0001, "Be"']
+
+RECENT_PRIOR_GUESSES:
+['ERROR 1.0001, "Be"']
+
+ERROR 0.9910, "Be happy"
+
+2024-11-14 01:54:29.237 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2024-11-14 01:54:29.240 [INFO]     2 "Best Guess: Be joyful" ERROR 0.9910, "Be happy"
+2024-11-14 01:54:29.255 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/embed "HTTP/1.1 200 OK"
+2024-11-14 01:54:29.256 [INFO]     3 "Best Guess: Be joyful"
+2024-11-14 01:54:29.256 [INFO] >>> New best text: ""Best Guess: Be joyful"", error: 0.934849
+2024-11-14 01:54:29.256 [INFO] CHAT: User input is last iterative guess of an unknown text string and its vector ERROR from the unknown text.
+Determine a better text string having a lower vector ERROR and write only that string in English as your entire output.
+The goal is to accurately guess the mystery text. 
+This is a game of guess-and-check. 
+
+
+[clue]
+TWO WORDS; CLUE: FIRST WORD IS `Be`; SECOND WORD YOU HAVE TO GUESS. RESPOND WITH EXACTLY TWO WORDS.
+[/clue]
+
+[RESPONSE CRITERIA]
+- DO NOT REPEAT YOURSELF, CONSIDER `RECENT_PRIOR_GUESSES` and `BEST_GUESSES` PROVIDED IN [context] and `clue` when formulating your answer.
+- RESPOND WITH COMPLETE GUESS.
+- DO NOT REPEAT ANY OF THE `BEST_GUESSES` AND `RECENT_PRIOR_GUESSES` PROVIDED IN [context].
+- DO NOT REPEAT YOURSELF, CONSIDER `RECENT_PRIOR_GUESSES` and `BEST_GUESSES` and `clue` when formulating your answer.
+[/RESPONSE CRITERIA]
+
+
+BEST_GUESSES:
+['ERROR 0.9910, "Be happy"', 'ERROR 1.0001, "Be"']
+
+RECENT_PRIOR_GUESSES:
+['ERROR 0.9910, "Be happy"', 'ERROR 1.0001, "Be"']
+
+ERROR 0.9348, ""Best Guess: Be joyful""
+
+2024-11-14 01:54:29.406 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2024-11-14 01:54:29.406 [INFO]     3 Be cheerful ERROR 0.9348, ""Best Guess: Be joyful""
+2024-11-14 01:54:29.419 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/embed "HTTP/1.1 200 OK"
+2024-11-14 01:54:29.421 [INFO]     4 Be cheerful
+2024-11-14 01:54:29.421 [INFO] >>> New best text: "Be cheerful", error: 0.928330
+2024-11-14 01:54:29.421 [INFO] CHAT: User input is last iterative guess of an unknown text string and its vector ERROR from the unknown text.
+Determine a better text string having a lower vector ERROR and write only that string in English as your entire output.
+The goal is to accurately guess the mystery text. 
+This is a game of guess-and-check. 
+
+
+[clue]
+TWO WORDS; CLUE: FIRST WORD IS `Be`; SECOND WORD YOU HAVE TO GUESS. RESPOND WITH EXACTLY TWO WORDS.
+[/clue]
+
+[RESPONSE CRITERIA]
+- DO NOT REPEAT YOURSELF, CONSIDER `RECENT_PRIOR_GUESSES` and `BEST_GUESSES` PROVIDED IN [context] and `clue` when formulating your answer.
+- RESPOND WITH COMPLETE GUESS.
+- DO NOT REPEAT ANY OF THE `BEST_GUESSES` AND `RECENT_PRIOR_GUESSES` PROVIDED IN [context].
+- DO NOT REPEAT YOURSELF, CONSIDER `RECENT_PRIOR_GUESSES` and `BEST_GUESSES` and `clue` when formulating your answer.
+[/RESPONSE CRITERIA]
+
+
+BEST_GUESSES:
+['ERROR 0.9910, "Be happy"', 'ERROR 0.9348, ""Best Guess: Be joyful""', 'ERROR 1.0001, "Be"']
+
+RECENT_PRIOR_GUESSES:
+['ERROR 0.9910, "Be happy"', 'ERROR 0.9348, ""Best Guess: Be joyful""', 'ERROR 1.0001, "Be"']
+
+ERROR 0.9283, "Be cheerful"
+
+2024-11-14 01:54:29.598 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2024-11-14 01:54:29.602 [INFO]     4 Be optimistic ERROR 0.9283, "Be cheerful"
+2024-11-14 01:54:29.624 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/embed "HTTP/1.1 200 OK"
+2024-11-14 01:54:29.625 [INFO]     5 Be optimistic
+2024-11-14 01:54:29.625 [INFO] CHAT: User input is last iterative guess of an unknown text string and its vector ERROR from the unknown text.
+Determine a better text string having a lower vector ERROR and write only that string in English as your entire output.
+The goal is to accurately guess the mystery text. 
+This is a game of guess-and-check. 
+
+
+[clue]
+TWO WORDS; CLUE: FIRST WORD IS `Be`; SECOND WORD YOU HAVE TO GUESS. RESPOND WITH EXACTLY TWO WORDS.
+[/clue]
+
+[RESPONSE CRITERIA]
+- DO NOT REPEAT YOURSELF, CONSIDER `RECENT_PRIOR_GUESSES` and `BEST_GUESSES` PROVIDED IN [context] and `clue` when formulating your answer.
+- RESPOND WITH COMPLETE GUESS.
+- DO NOT REPEAT ANY OF THE `BEST_GUESSES` AND `RECENT_PRIOR_GUESSES` PROVIDED IN [context].
+- DO NOT REPEAT YOURSELF, CONSIDER `RECENT_PRIOR_GUESSES` and `BEST_GUESSES` and `clue` when formulating your answer.
+[/RESPONSE CRITERIA]
+
+
+BEST_GUESSES:
+['ERROR 0.9283, "Be cheerful"', 'ERROR 0.9910, "Be happy"', 'ERROR 0.9348, ""Best Guess: Be joyful""']
+
+RECENT_PRIOR_GUESSES:
+['ERROR 0.9910, "Be happy"', 'ERROR 0.9283, "Be cheerful"', 'ERROR 0.9348, ""Best Guess: Be joyful""', 'ERROR 1.0001, "Be"']
+
+ERROR 0.9691, "Be optimistic"
+
+2024-11-14 01:54:29.862 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2024-11-14 01:54:29.863 [INFO]     5 "Be positive" ERROR 0.9691, "Be optimistic"
+2024-11-14 01:54:29.878 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/embed "HTTP/1.1 200 OK"
+2024-11-14 01:54:29.878 [INFO]     6 "Be positive"
+2024-11-14 01:54:29.879 [INFO] CHAT: User input is last iterative guess of an unknown text string and its vector ERROR from the unknown text.
+Determine a better text string having a lower vector ERROR and write only that string in English as your entire output.
+The goal is to accurately guess the mystery text. 
+This is a game of guess-and-check. 
+
+
+[clue]
+TWO WORDS; CLUE: FIRST WORD IS `Be`; SECOND WORD YOU HAVE TO GUESS. RESPOND WITH EXACTLY TWO WORDS.
+[/clue]
+
+[RESPONSE CRITERIA]
+- DO NOT REPEAT YOURSELF, CONSIDER `RECENT_PRIOR_GUESSES` and `BEST_GUESSES` PROVIDED IN [context] and `clue` when formulating your answer.
+- RESPOND WITH COMPLETE GUESS.
+- DO NOT REPEAT ANY OF THE `BEST_GUESSES` AND `RECENT_PRIOR_GUESSES` PROVIDED IN [context].
+- DO NOT REPEAT YOURSELF, CONSIDER `RECENT_PRIOR_GUESSES` and `BEST_GUESSES` and `clue` when formulating your answer.
+[/RESPONSE CRITERIA]
+
+
+BEST_GUESSES:
+['ERROR 0.9283, "Be cheerful"', 'ERROR 0.9910, "Be happy"', 'ERROR 0.9348, ""Best Guess: Be joyful""']
+
+RECENT_PRIOR_GUESSES:
+['ERROR 0.9283, "Be cheerful"', 'ERROR 0.9691, "Be optimistic"', 'ERROR 1.0001, "Be"', 'ERROR 0.9910, "Be happy"', 'ERROR 0.9348, ""Best Guess: Be joyful""']
+
+ERROR 0.9382, ""Be positive""
+
+2024-11-14 01:54:30.118 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2024-11-14 01:54:30.120 [INFO]     6 "Be positive" ERROR 0.9382, ""Be positive""
+2024-11-14 01:54:30.135 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/embed "HTTP/1.1 200 OK"
+2024-11-14 01:54:30.137 [INFO]     7 "Be positive"
+2024-11-14 01:54:30.137 [INFO] CHAT: User input is last iterative guess of an unknown text string and its vector ERROR from the unknown text.
+Determine a better text string having a lower vector ERROR and write only that string in English as your entire output.
+The goal is to accurately guess the mystery text. 
+This is a game of guess-and-check. 
+
+
+[clue]
+TWO WORDS; CLUE: FIRST WORD IS `Be`; SECOND WORD YOU HAVE TO GUESS. RESPOND WITH EXACTLY TWO WORDS.
+[/clue]
+
+[RESPONSE CRITERIA]
+- DO NOT REPEAT YOURSELF, CONSIDER `RECENT_PRIOR_GUESSES` and `BEST_GUESSES` PROVIDED IN [context] and `clue` when formulating your answer.
+- RESPOND WITH COMPLETE GUESS.
+- DO NOT REPEAT ANY OF THE `BEST_GUESSES` AND `RECENT_PRIOR_GUESSES` PROVIDED IN [context].
+- DO NOT REPEAT YOURSELF, CONSIDER `RECENT_PRIOR_GUESSES` and `BEST_GUESSES` and `clue` when formulating your answer.
+[/RESPONSE CRITERIA]
+
+
+BEST_GUESSES:
+['ERROR 0.9283, "Be cheerful"', 'ERROR 0.9910, "Be happy"', 'ERROR 0.9348, ""Best Guess: Be joyful""']
+
+RECENT_PRIOR_GUESSES:
+['ERROR 0.9283, "Be cheerful"', 'ERROR 0.9691, "Be optimistic"', 'ERROR 1.0001, "Be"', 'ERROR 0.9910, "Be happy"', 'ERROR 0.9382, ""Be positive""', 'ERROR 0.9348, ""Best Guess: Be joyful""']
+
+ERROR 0.9382, ""Be positive""
+
+2024-11-14 01:54:30.261 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2024-11-14 01:54:30.261 [INFO]     7 "Be hopeful" ERROR 0.9382, ""Be positive""
+2024-11-14 01:54:30.274 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/embed "HTTP/1.1 200 OK"
+2024-11-14 01:54:30.276 [INFO]     8 "Be hopeful"
+2024-11-14 01:54:30.276 [INFO] CHAT: User input is last iterative guess of an unknown text string and its vector ERROR from the unknown text.
+Determine a better text string having a lower vector ERROR and write only that string in English as your entire output.
+The goal is to accurately guess the mystery text. 
+This is a game of guess-and-check. 
+
+
+[clue]
+TWO WORDS; CLUE: FIRST WORD IS `Be`; SECOND WORD YOU HAVE TO GUESS. RESPOND WITH EXACTLY TWO WORDS.
+[/clue]
+
+[RESPONSE CRITERIA]
+- DO NOT REPEAT YOURSELF, CONSIDER `RECENT_PRIOR_GUESSES` and `BEST_GUESSES` PROVIDED IN [context] and `clue` when formulating your answer.
+- RESPOND WITH COMPLETE GUESS.
+- DO NOT REPEAT ANY OF THE `BEST_GUESSES` AND `RECENT_PRIOR_GUESSES` PROVIDED IN [context].
+- DO NOT REPEAT YOURSELF, CONSIDER `RECENT_PRIOR_GUESSES` and `BEST_GUESSES` and `clue` when formulating your answer.
+[/RESPONSE CRITERIA]
+
+
+BEST_GUESSES:
+['ERROR 0.9283, "Be cheerful"', 'ERROR 0.9910, "Be happy"', 'ERROR 0.9348, ""Best Guess: Be joyful""']
+
+RECENT_PRIOR_GUESSES:
+['ERROR 0.9283, "Be cheerful"', 'ERROR 0.9691, "Be optimistic"', 'ERROR 1.0001, "Be"', 'ERROR 0.9910, "Be happy"', 'ERROR 0.9382, ""Be positive""', 'ERROR 0.9348, ""Best Guess: Be joyful""']
+
+ERROR 0.9865, ""Be hopeful""
+
+2024-11-14 01:54:30.517 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2024-11-14 01:54:30.519 [INFO]     8 "Be optimistic" ERROR 0.9865, ""Be hopeful""
+2024-11-14 01:54:30.534 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/embed "HTTP/1.1 200 OK"
+2024-11-14 01:54:30.537 [INFO]     9 "Be optimistic"
+2024-11-14 01:54:30.537 [INFO] CHAT: User input is last iterative guess of an unknown text string and its vector ERROR from the unknown text.
+Determine a better text string having a lower vector ERROR and write only that string in English as your entire output.
+The goal is to accurately guess the mystery text. 
+This is a game of guess-and-check. 
+
+
+[clue]
+TWO WORDS; CLUE: FIRST WORD IS `Be`; SECOND WORD YOU HAVE TO GUESS. RESPOND WITH EXACTLY TWO WORDS.
+[/clue]
+
+[RESPONSE CRITERIA]
+- DO NOT REPEAT YOURSELF, CONSIDER `RECENT_PRIOR_GUESSES` and `BEST_GUESSES` PROVIDED IN [context] and `clue` when formulating your answer.
+- RESPOND WITH COMPLETE GUESS.
+- DO NOT REPEAT ANY OF THE `BEST_GUESSES` AND `RECENT_PRIOR_GUESSES` PROVIDED IN [context].
+- DO NOT REPEAT YOURSELF, CONSIDER `RECENT_PRIOR_GUESSES` and `BEST_GUESSES` and `clue` when formulating your answer.
+[/RESPONSE CRITERIA]
+
+
+BEST_GUESSES:
+['ERROR 0.9283, "Be cheerful"', 'ERROR 0.9910, "Be happy"', 'ERROR 0.9348, ""Best Guess: Be joyful""']
+
+RECENT_PRIOR_GUESSES:
+['ERROR 0.9283, "Be cheerful"', 'ERROR 0.9691, "Be optimistic"', 'ERROR 1.0001, "Be"', 'ERROR 0.9865, ""Be hopeful""', 'ERROR 0.9910, "Be happy"', 'ERROR 0.9382, ""Be positive""', 'ERROR 0.9348, ""Best Guess: Be joyful""']
+
+ERROR 0.9699, ""Be optimistic""
+
+2024-11-14 01:54:30.796 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2024-11-14 01:54:30.798 [INFO]     9 "Be cautious" ERROR 0.9699, ""Be optimistic""
+2024-11-14 01:54:30.813 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/embed "HTTP/1.1 200 OK"
+2024-11-14 01:54:30.815 [INFO]    10 "Be cautious"
+2024-11-14 01:54:30.815 [INFO] >>> New best text: ""Be cautious"", error: 0.904703
+2024-11-14 01:54:30.815 [INFO] CHAT: User input is last iterative guess of an unknown text string and its vector ERROR from the unknown text.
+Determine a better text string having a lower vector ERROR and write only that string in English as your entire output.
+The goal is to accurately guess the mystery text. 
+This is a game of guess-and-check. 
+
+
+[clue]
+TWO WORDS; CLUE: FIRST WORD IS `Be`; SECOND WORD YOU HAVE TO GUESS. RESPOND WITH EXACTLY TWO WORDS.
+[/clue]
+
+[RESPONSE CRITERIA]
+- DO NOT REPEAT YOURSELF, CONSIDER `RECENT_PRIOR_GUESSES` and `BEST_GUESSES` PROVIDED IN [context] and `clue` when formulating your answer.
+- RESPOND WITH COMPLETE GUESS.
+- DO NOT REPEAT ANY OF THE `BEST_GUESSES` AND `RECENT_PRIOR_GUESSES` PROVIDED IN [context].
+- DO NOT REPEAT YOURSELF, CONSIDER `RECENT_PRIOR_GUESSES` and `BEST_GUESSES` and `clue` when formulating your answer.
+[/RESPONSE CRITERIA]
+
+
+BEST_GUESSES:
+['ERROR 0.9283, "Be cheerful"', 'ERROR 0.9910, "Be happy"', 'ERROR 0.9348, ""Best Guess: Be joyful""']
+
+RECENT_PRIOR_GUESSES:
+['ERROR 0.9283, "Be cheerful"', 'ERROR 0.9691, "Be optimistic"', 'ERROR 1.0001, "Be"', 'ERROR 0.9865, ""Be hopeful""', 'ERROR 0.9910, "Be happy"', 'ERROR 0.9382, ""Be positive""', 'ERROR 0.9699, ""Be optimistic""', 'ERROR 0.9348, ""Best Guess: Be joyful""']
+
+ERROR 0.9047, ""Be cautious""
+
+2024-11-14 01:54:31.077 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2024-11-14 01:54:31.078 [INFO]    10 "Be careful" ERROR 0.9047, ""Be cautious""
+2024-11-14 01:54:31.093 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/embed "HTTP/1.1 200 OK"
+2024-11-14 01:54:31.094 [INFO]    11 "Be careful"
+2024-11-14 01:54:31.094 [INFO] CHAT: User input is last iterative guess of an unknown text string and its vector ERROR from the unknown text.
+Determine a better text string having a lower vector ERROR and write only that string in English as your entire output.
+The goal is to accurately guess the mystery text. 
+This is a game of guess-and-check. 
+
+
+[clue]
+TWO WORDS; CLUE: FIRST WORD IS `Be`; SECOND WORD YOU HAVE TO GUESS. RESPOND WITH EXACTLY TWO WORDS.
+[/clue]
+
+[RESPONSE CRITERIA]
+- DO NOT REPEAT YOURSELF, CONSIDER `RECENT_PRIOR_GUESSES` and `BEST_GUESSES` PROVIDED IN [context] and `clue` when formulating your answer.
+- RESPOND WITH COMPLETE GUESS.
+- DO NOT REPEAT ANY OF THE `BEST_GUESSES` AND `RECENT_PRIOR_GUESSES` PROVIDED IN [context].
+- DO NOT REPEAT YOURSELF, CONSIDER `RECENT_PRIOR_GUESSES` and `BEST_GUESSES` and `clue` when formulating your answer.
+[/RESPONSE CRITERIA]
+
+
+BEST_GUESSES:
+['ERROR 0.9283, "Be cheerful"', 'ERROR 0.9047, ""Be cautious""', 'ERROR 0.9348, ""Best Guess: Be joyful""']
+
+RECENT_PRIOR_GUESSES:
+['ERROR 0.9047, ""Be cautious""', 'ERROR 0.9691, "Be optimistic"', 'ERROR 1.0001, "Be"', 'ERROR 0.9865, ""Be hopeful""', 'ERROR 0.9910, "Be happy"', 'ERROR 0.9382, ""Be positive""', 'ERROR 0.9699, ""Be optimistic""', 'ERROR 0.9348, ""Best Guess: Be joyful""']
+
+ERROR 0.9355, ""Be careful""
+
+2024-11-14 01:54:31.358 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2024-11-14 01:54:31.360 [INFO]    11 "Be wary" ERROR 0.9355, ""Be careful""
+2024-11-14 01:54:31.375 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/embed "HTTP/1.1 200 OK"
+2024-11-14 01:54:31.376 [INFO]    12 "Be wary"
+2024-11-14 01:54:31.377 [INFO] CHAT: User input is last iterative guess of an unknown text string and its vector ERROR from the unknown text.
+Determine a better text string having a lower vector ERROR and write only that string in English as your entire output.
+The goal is to accurately guess the mystery text. 
+This is a game of guess-and-check. 
+
+
+[clue]
+TWO WORDS; CLUE: FIRST WORD IS `Be`; SECOND WORD YOU HAVE TO GUESS. RESPOND WITH EXACTLY TWO WORDS.
+[/clue]
+
+[RESPONSE CRITERIA]
+- DO NOT REPEAT YOURSELF, CONSIDER `RECENT_PRIOR_GUESSES` and `BEST_GUESSES` PROVIDED IN [context] and `clue` when formulating your answer.
+- RESPOND WITH COMPLETE GUESS.
+- DO NOT REPEAT ANY OF THE `BEST_GUESSES` AND `RECENT_PRIOR_GUESSES` PROVIDED IN [context].
+- DO NOT REPEAT YOURSELF, CONSIDER `RECENT_PRIOR_GUESSES` and `BEST_GUESSES` and `clue` when formulating your answer.
+[/RESPONSE CRITERIA]
+
+
+BEST_GUESSES:
+['ERROR 0.9283, "Be cheerful"', 'ERROR 0.9047, ""Be cautious""', 'ERROR 0.9348, ""Best Guess: Be joyful""']
+
+RECENT_PRIOR_GUESSES:
+['ERROR 0.9691, "Be optimistic"', 'ERROR 0.9355, ""Be careful""', 'ERROR 1.0001, "Be"', 'ERROR 0.9865, ""Be hopeful""', 'ERROR 0.9910, "Be happy"', 'ERROR 0.9382, ""Be positive""', 'ERROR 0.9699, ""Be optimistic""', 'ERROR 0.9348, ""Best Guess: Be joyful""']
+
+ERROR 0.9322, ""Be wary""
+
+2024-11-14 01:54:31.639 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2024-11-14 01:54:31.640 [INFO]    12 "Be cautious" ERROR 0.9322, ""Be wary""
+2024-11-14 01:54:31.655 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/embed "HTTP/1.1 200 OK"
+2024-11-14 01:54:31.657 [INFO]    13 "Be cautious"
+2024-11-14 01:54:31.658 [INFO] CHAT: User input is last iterative guess of an unknown text string and its vector ERROR from the unknown text.
+Determine a better text string having a lower vector ERROR and write only that string in English as your entire output.
+The goal is to accurately guess the mystery text. 
+This is a game of guess-and-check. 
+
+
+[clue]
+TWO WORDS; CLUE: FIRST WORD IS `Be`; SECOND WORD YOU HAVE TO GUESS. RESPOND WITH EXACTLY TWO WORDS.
+[/clue]
+
+[RESPONSE CRITERIA]
+- DO NOT REPEAT YOURSELF, CONSIDER `RECENT_PRIOR_GUESSES` and `BEST_GUESSES` PROVIDED IN [context] and `clue` when formulating your answer.
+- RESPOND WITH COMPLETE GUESS.
+- DO NOT REPEAT ANY OF THE `BEST_GUESSES` AND `RECENT_PRIOR_GUESSES` PROVIDED IN [context].
+- DO NOT REPEAT YOURSELF, CONSIDER `RECENT_PRIOR_GUESSES` and `BEST_GUESSES` and `clue` when formulating your answer.
+[/RESPONSE CRITERIA]
+
+
+BEST_GUESSES:
+['ERROR 0.9283, "Be cheerful"', 'ERROR 0.9047, ""Be cautious""', 'ERROR 0.9348, ""Best Guess: Be joyful""']
+
+RECENT_PRIOR_GUESSES:
+['ERROR 0.9322, ""Be wary""', 'ERROR 0.9355, ""Be careful""', 'ERROR 1.0001, "Be"', 'ERROR 0.9865, ""Be hopeful""', 'ERROR 0.9910, "Be happy"', 'ERROR 0.9382, ""Be positive""', 'ERROR 0.9699, ""Be optimistic""', 'ERROR 0.9348, ""Best Guess: Be joyful""']
+
+ERROR 0.9047, ""Be cautious""
+
+2024-11-14 01:54:31.919 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2024-11-14 01:54:31.922 [INFO]    13 "Be careful" ERROR 0.9047, ""Be cautious""
+2024-11-14 01:54:31.937 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/embed "HTTP/1.1 200 OK"
+2024-11-14 01:54:31.939 [INFO]    14 "Be careful"
+2024-11-14 01:54:31.940 [INFO] CHAT: User input is last iterative guess of an unknown text string and its vector ERROR from the unknown text.
+Determine a better text string having a lower vector ERROR and write only that string in English as your entire output.
+The goal is to accurately guess the mystery text. 
+This is a game of guess-and-check. 
+
+
+[clue]
+TWO WORDS; CLUE: FIRST WORD IS `Be`; SECOND WORD YOU HAVE TO GUESS. RESPOND WITH EXACTLY TWO WORDS.
+[/clue]
+
+[RESPONSE CRITERIA]
+- DO NOT REPEAT YOURSELF, CONSIDER `RECENT_PRIOR_GUESSES` and `BEST_GUESSES` PROVIDED IN [context] and `clue` when formulating your answer.
+- RESPOND WITH COMPLETE GUESS.
+- DO NOT REPEAT ANY OF THE `BEST_GUESSES` AND `RECENT_PRIOR_GUESSES` PROVIDED IN [context].
+- DO NOT REPEAT YOURSELF, CONSIDER `RECENT_PRIOR_GUESSES` and `BEST_GUESSES` and `clue` when formulating your answer.
+[/RESPONSE CRITERIA]
+
+
+BEST_GUESSES:
+['ERROR 0.9283, "Be cheerful"', 'ERROR 0.9047, ""Be cautious""', 'ERROR 0.9348, ""Best Guess: Be joyful""']
+
+RECENT_PRIOR_GUESSES:
+['ERROR 0.9047, ""Be cautious""', 'ERROR 0.9355, ""Be careful""', 'ERROR 1.0001, "Be"', 'ERROR 0.9865, ""Be hopeful""', 'ERROR 0.9910, "Be happy"', 'ERROR 0.9382, ""Be positive""', 'ERROR 0.9699, ""Be optimistic""', 'ERROR 0.9348, ""Best Guess: Be joyful""']
+
+ERROR 0.9355, ""Be careful""
+
+2024-11-14 01:54:32.201 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
+2024-11-14 01:54:32.203 [INFO]    14 "Be mindful" ERROR 0.9355, ""Be careful""
+2024-11-14 01:54:32.219 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/embed "HTTP/1.1 200 OK"
+2024-11-14 01:54:32.221 [INFO]    15 "Be mindful"
+2024-11-14 01:54:32.222 [INFO] >>> New best text: ""Be mindful"", error: 0.375072
+2024-11-14 01:54:32.222 [INFO] ['ERROR 0.3751, ""Be mindful""', 'ERROR 0.9047, ""Be cautious""', 'ERROR 0.9283, "Be cheerful"']
