@@ -16,8 +16,6 @@ This blog post explores the intriguing process of recovering text from embedding
 - [Privacy Risks in Dense Retrieval Systems](#privacy-risks-in-dense-retrieval-systems)
 - [Mitigating Privacy Risks with Embedding Transformation](#mitigating-privacy-risks-with-embedding-transformation)
 - [Reverse Engineering Embeddings: A Code Walkthrough](#reverse-engineering-embeddings-a-code-walkthrough)
-- [Supercharging with Modal](#supercharging-with-modal)
-- [Integrating Modal into the Workflow](#integrating-modal-into-the-workflow)
 - [Conclusion](#conclusion)
 - [References](#references)
 
@@ -277,69 +275,11 @@ The resource-intensive nature of bruteforcing can pose challenges, especially wh
 
 ---
 
-## Supercharging with Modal
-
-### What is Modal?
-
-[Modal](https://modal.com) is a serverless cloud platform designed to simplify and accelerate AI and data workloads. Founded by Erik Bernhardsson, former CTO at Better.com and a pioneer in machine learning infrastructure, Modal brings a fresh perspective to cloud computing.
-
-### Why Use Modal?
-
-- **Lightning-Fast Deployment**: Deploy functions to the cloud in seconds.
-- **Effortless Scalability**: Instantly scale from a single GPU to hundreds.
-- **Pay-Per-Use Pricing**: Only pay for the compute time you use.
-- **Developer-Friendly**: Write infrastructure as code in Python, no YAML needed.
-
-**Modal** enables developers to focus on writing code without worrying about the complexities of cloud infrastructure, making it an ideal platform for running computationally intensive tasks like embedding inversion.
-
----
-
-## Integrating Modal into the Workflow
-
-Let's see how we can integrate Modal into our embedding inversion code to leverage its powerful features.
-
-### Updated Code with Modal
-
-```python
-COMING SOON.
-```
-
-### Run with modal
-
-**To execute the script using Modal, type:**
-```
-modal run demo.py
-```
-
-### What's New?
-
-- **Modal Integration**: We import the `modal` module and define an app with `modal.App("bruteforce-embeddings")`.
-- **Entry Point**: The `demo()` function is decorated with `@app.local_entrypoint()`, indicating where the program starts.
-- **Scalability and Performance**: By running this code on Modal, we benefit from its serverless architecture, fast deployment, and scaling capabilities.
-
-### Sample Output
-
-The code will produce logs similar to the following:
-
-```
-2024-11-14 02:49:03.208 [INFO] CHAT: User input is last iterative guess of an unknown text string and its vector ERROR from the unknown text.
-...
-2024-11-14 02:49:03.507 [INFO]    44 "Be Mindful"
-2024-11-14 02:49:03.508 [INFO] >>> New best text: ""Be Mindful"", error: 0.375072
-...
-```
-
-This indicates that the script successfully converged to the target text "Be mindful" with an acceptable error margin.
-
----
-
 ## Conclusion
 
 Embeddings are a cornerstone of modern NLP applications, providing powerful capabilities for understanding and processing human language. However, as we've explored, they also introduce potential privacy risks due to the possibility of embedding inversion.
 
 By understanding these risks and implementing mitigation strategies like embedding transformation, we can enhance the privacy and security of dense retrieval systems. The iterative process of recovering text from embeddings, as demonstrated in the code, highlights both the vulnerabilities and the need for robust safeguards.
-
-Leveraging platforms like **Modal** empowers developers and researchers to efficiently run complex AI workloads without the overhead of managing cloud infrastructure. Modal's developer-friendly, scalable, and cost-effective environment accelerates innovation and enables us to tackle challenges like embedding inversion more effectively.
 
 As the field of NLP continues to advance, ongoing research and development will be crucial in refining these methods and ensuring that privacy is not compromised in the pursuit of technological progress.
 
@@ -350,7 +290,6 @@ As the field of NLP continues to advance, ongoing research and development will 
 - [Understanding and Mitigating the Threat of Vec2Text to Dense Retrieval Systems](https://arxiv.org/abs/2402.12784)
 - [SurfinScott/semantic-vector-clustering](https://github.com/SurfinScott/semantic-vector-clustering/)
 - [Discover Latent Semantic Structure with Vector Clustering](https://www.mongodb.com/developer/products/atlas/discover-latent-semantic-structure-with-vector-clustering/)
-- [Modal: The Cloud Platform for AI Development](https://modal.com)
 
 ---
 
