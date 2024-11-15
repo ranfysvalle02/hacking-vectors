@@ -363,6 +363,8 @@ There are several types of embeddings, each with its own strengths and weaknesse
 
 ## Parallelization: Supercharging the Process
 
+![](https://wp.technologyreview.com/wp-content/uploads/2018/10/blockchainexplainer10.4-02-9.gif?resize=1200,600)
+
 The process of embedding inversion, particularly through bruteforcing, can be computationally expensive and time-consuming. It involves generating a large number of hypotheses and calculating the error between the target embedding and the embedding of each hypothesis. This iterative process continues until a satisfactory approximation of the target text is achieved or a predefined cost limit is reached.
 
 To accelerate the embedding inversion process, we leverage the power of Ray, a versatile framework for parallel and distributed computing. Ray enables us to efficiently distribute tasks across multiple machines or cores, significantly speeding up the generation and evaluation of guesses. 
