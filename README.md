@@ -24,6 +24,8 @@ Embeddings are designed to capture the semantic essence of text. If someone can 
 
 ## Privacy Risks in Dense Retrieval Systems
 
+![](https://www.pinecone.io/_next/image/?url=https%3A%2F%2Fcdn.sanity.io%2Fimages%2Fvr8gru94%2Fproduction%2F4b2322c9e956609949a182c161923f25ce4d9483-1920x1080.png&w=3840&q=75)
+
 Dense retrieval systems utilize embeddings to enhance search accuracy by capturing semantic similarities between queries and documents. However, their reliance on embeddings introduces potential vulnerabilities:
 
 - **Embedding Inversion**: Attackers can reconstruct sensitive text data from embeddings.
