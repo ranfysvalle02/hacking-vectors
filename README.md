@@ -62,6 +62,18 @@ While embedding transformation techniques offer promising solutions to mitigate 
 
 ---
 
+## The Challenge of Sophisticated Attacks
+
+If an attacker can discern the pattern of transformation applied to the embeddings, they could potentially reverse-engineer the process, reconstructing the original embeddings and, subsequently, the original text.
+
+This is particularly concerning if the transformation process is deterministic and consistently applies the same transformation to the embeddings. Once the attacker understands the transformation function, they could apply the inverse of this function to the transformed embeddings to recover the original embeddings.
+
+Moreover, if the attacker has access to a large amount of transformed data and corresponding original text, they could potentially use machine learning techniques to learn the transformation function. This could then be used to brute-force the transformation on other transformed embeddings, effectively bypassing the privacy measures.
+
+This highlights the importance of not only applying transformations but also ensuring that these transformations are complex and varied enough to resist such sophisticated attacks. Techniques such as randomizing the transformation function or adding a sufficient amount of noise could help in making the reverse-engineering process more difficult. However, these methods also need to be balanced with the need to preserve the utility of the embeddings for their intended purpose.
+
+---
+
 ## Reverse Engineering Embeddings: A Code Walkthrough
 
 To tackle this challenge, we'll use the following tools:
