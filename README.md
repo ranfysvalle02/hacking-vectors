@@ -314,11 +314,9 @@ This experiment demonstrates the potential of combining LLMs with embeddings and
 
 ## Conclusion
 
-Embeddings are a cornerstone of modern NLP applications, providing powerful capabilities for understanding and processing human language. However, as we've explored, they also introduce potential privacy risks due to the possibility of embedding inversion.
+Embeddings are a cornerstone of modern NLP applications, providing powerful capabilities for understanding and processing human language. However, they also introduce potential privacy risks due to the possibility of embedding inversion.
 
 By understanding these risks and implementing mitigation strategies like embedding transformation, we can enhance the privacy and security of dense retrieval systems. The iterative process of recovering text from embeddings, as demonstrated in the code, highlights both the vulnerabilities and the need for robust safeguards.
-
-As the field of NLP continues to advance, ongoing research and development will be crucial in refining these methods and ensuring that privacy is not compromised in the pursuit of technological progress.
 
 ---
 
