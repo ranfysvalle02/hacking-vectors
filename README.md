@@ -375,7 +375,7 @@ Ray's simplicity and scalability make it an ideal tool for tackling computationa
 
 ### Pushing the Limits of Parallelization
 
-In our experiment, we pushed the limits of parallelization to see how it would impact the performance and efficiency of the process. We started with 50 parallel processes, which ran smoothly and significantly sped up the process. However, when we increased the number to 500, it put a significant strain on the system, causing it to rev up and almost crash. It was akin to a self-inflicted Distributed Denial of Service (DDoS) attack!
+In our experiment, we pushed the limits of parallelization to see how it would impact the performance and efficiency of the process. We started with 50 parallel processes, which ran smoothly and significantly sped up the process. However, when we increased the number to 500, it put a significant strain on the system, causing it to rev up and almost crash. Like a self-inflicted Distributed Denial of Service (DDoS) attack!
 
 We then tried running 100 parallel processes. While this did cause the system to heat up, it was able to handle the load and quickly found the solution. Here's the output from the run with 100 parallel processes:
 
