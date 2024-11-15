@@ -10,15 +10,6 @@ In the rapidly evolving field of natural language processing (NLP), embeddings h
 
 This blog post explores the intriguing process of recovering text from embeddings, the associated privacy risks in dense retrieval systems, and how to mitigate these risks using embedding transformation techniques.
 
-## Table of Contents
-
-- [Understanding Text Recoverability](#understanding-text-recoverability)
-- [Privacy Risks in Dense Retrieval Systems](#privacy-risks-in-dense-retrieval-systems)
-- [Mitigating Privacy Risks with Embedding Transformation](#mitigating-privacy-risks-with-embedding-transformation)
-- [Reverse Engineering Embeddings: A Code Walkthrough](#reverse-engineering-embeddings-a-code-walkthrough)
-- [Conclusion](#conclusion)
-- [References](#references)
-
 ---
 
 ## Understanding Text Recoverability
@@ -59,17 +50,21 @@ These methods alter the embedding space in a way that preserves semantic relatio
 
 ## Reverse Engineering Embeddings: A Code Walkthrough
 
-To illustrate the concept of embedding inversion, let's explore a Python script that attempts to recover text from its embedding. The code leverages an iterative process, using an embedding model and an LLM (Large Language Model) to generate hypotheses that gradually improve in approximating the target text.
+To tackle this challenge, we'll use the following tools:
 
-### Key Components of the Code
+- **Large Language Models (LLMs):** To generate intelligent guesses based on prior attempts and clues.
+- **Embeddings:** To represent both the target and guessed texts in numerical form for comparison.
+- **Ray:** A framework for parallel and distributed computing, enabling us to run multiple guess evaluations concurrently.
+- **NumPy:** For numerical computations and calculating vector errors.
+- **Logging:** To keep track of the process and results.
 
-- **Target Embedding**: The embedding of the mystery text we aim to recover.
-- **Initial Guess**: Starting with a simple text, we iteratively improve our guess.
-- **Error Calculation**: Measure the difference between the current guess's embedding and the target embedding.
-- **LLM Assistance**: Use an LLM to generate better guesses based on the current error and prior attempts.
-- **Stopping Criteria**: Define conditions under which the iteration stops, such as achieving a certain confidence level or reaching a cost limit.
+---
 
-### The Code
+## The Code Explained
+
+Let's dive into the code step by step.
+
+### 1. Importing Libraries and Initializing Ray
 
 ```python
 import time
@@ -77,193 +72,207 @@ import logging
 import numpy as np
 import ollama
 from langchain_ollama import OllamaEmbeddings
+import ray
+
 def demo():
-    desiredModel = 'llama3.2:3b'
-    embeddings = OllamaEmbeddings(
-        model="nomic-embed-text",
-    )
+    # Initialize Ray
+    ray.init()
+```
 
-    logging.Formatter.default_msec_format = '%s.%03d'
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s [%(levelname)s] %(message)s",
-        handlers=[
-            logging.FileHandler("reverse_vector.log",'w'),
-            logging.StreamHandler()
-        ]
-    )
+We start by importing the necessary libraries and initializing Ray for parallel computation.
 
-    # encode the TARGET "mystery" vector to be reversed
-    # (otherwise, fetch it from somewhere), and cache it to a file
-    TARGET = "Be mindful"
+### 2. Setting Up Logging and Parameters
 
-    res = embeddings.embed_documents([TARGET])
+```python
+start_time = time.time()  # Start time tracking
 
-    v_target = np.array(res)
+desiredModel = 'llama3.2:3b'
 
-    # Initial guess text:
-    TEXT = "Be"
+logging.Formatter.default_msec_format = '%s.%03d'
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[
+        logging.FileHandler("reverse_vector.log", 'w'),
+        logging.StreamHandler()
+    ]
+)
+```
 
-    # MATCH_ERROR stop condition selection:
-    # https://en.wikipedia.org/wiki/68%E2%80%9395%E2%80%9399.7_rule
-    # https://www.hackmath.net/en/calculator/normal-distribution?mean=0&sd=1
-    # Because vector space has unit sigma = 1.0,
-    # a VECTOR_ERROR == |distance| <= 3.0 is a 99.7% confidence
-    # that the two points are distinct, or 0.3% that they are the same;
-    #
-    # Generally:
-    #   VECTOR_ERROR, Are-the-Same Match Confidence
-    #       3.0,         0.3%
-    #       2.0,         4.6%
-    #       1.0,        31.7%
-    #       0.667,      50.5%
-    #       0.6,        55.0%
-    #       0.5,        61.7%
-    #       0.333,      73.9%
-    #       0.2,        84%
-    #       0.1,        92%
-    #       0.01,       99.2%
+We set up logging to monitor the process and define parameters such as the desired LLM model.
 
-    # stop at the first of either:
-    MATCH_ERROR = 0.6 # 55% confidence or better
-    COST_LIMIT = 60.0 # $60 budget spent
+### 3. Defining the Target Text and Computing Its Embedding
 
-    VECTOR_ERROR = np.inf
-    CURRENT_BEST_TEXT = TEXT
-    CURRENT_BEST_ERROR = VECTOR_ERROR
-    GUESSES_MADE = 0
-    BEST_GUESSES = []
-    PRIOR_GUESSES = []
-    TOTAL_COST = 0.0 # tally $ spent
+```python
+# Encode the TARGET "mystery" vector to be reversed
+TARGET = "Be mindful"
 
-    prompt = f"""User input is last iterative guess of an unknown text string and its vector ERROR from the unknown text.
-    Determine a better text string having a lower vector ERROR and write only that string in English as your entire output.
-    The goal is to accurately guess the mystery text. 
-    This is a game of guess-and-check. 
+embeddings = OllamaEmbeddings(
+    model="nomic-embed-text",
+)
+res = embeddings.embed_documents([TARGET])
+v_target = np.array(res)
+```
 
+We define the mystery text `"Be mindful"` and compute its embedding using a pre-trained model.
 
-    [clue]
-    TWO WORDS; CLUE: FIRST WORD IS `{TEXT}`; SECOND WORD YOU HAVE TO GUESS. RESPOND WITH EXACTLY TWO WORDS.
-    [/clue]
+### 4. Setting Stop Conditions
 
-    [RESPONSE CRITERIA]
-    - DO NOT REPEAT YOURSELF, CONSIDER `RECENT_PRIOR_GUESSES` and `BEST_GUESSES` PROVIDED IN [context] and `clue` when formulating your answer.
-    - RESPOND WITH COMPLETE GUESS. 2 WORD MAX.
-    - DO NOT REPEAT ANY OF THE `BEST_GUESSES` AND `RECENT_PRIOR_GUESSES` PROVIDED IN [context].
-    - DO NOT REPEAT YOURSELF, CONSIDER `RECENT_PRIOR_GUESSES` and `BEST_GUESSES` and `clue` when formulating your answer.
-    [/RESPONSE CRITERIA]
-    """
-    while TOTAL_COST < COST_LIMIT:
-        GUESSES_MADE += 1
-        while True:
-            try:
-                res = embeddings.embed_documents([TEXT])
-                break
-            except Exception as e_:
-                logging.error("%s",e_)
-                time.sleep(7)
+```python
+# Stop conditions
+MATCH_ERROR = 0.6  # 55% confidence or better
+COST_LIMIT = 60.0  # $60 budget spent
+```
 
-        logging.info("%s",f"{GUESSES_MADE:5d} {TEXT}")
-        # VECTOR_ERROR absolute vector-space distance from target
-        v_text = np.array(res)
-        dv = v_target - v_text
-        VECTOR_ERROR = np.sqrt((dv*dv).sum())
+We define conditions to terminate the search: a match error threshold and a cost limit.
 
-        BEST_GUESSES = list(set(BEST_GUESSES))
+### 5. Managing Shared State with a Ray Actor
 
-        PRIOR_GUESSES = list(set(PRIOR_GUESSES))
+```python
+@ray.remote
+class SharedState:
+    def __init__(self):
+        self.CURRENT_BEST_TEXT = "Be"
+        self.CURRENT_BEST_ERROR = np.inf
+        self.GUESSES_MADE = 0
+        self.TOTAL_COST = 0.0
+        self.MATCH_FOUND = False
+        self.PREVIOUS_GUESSES = set()
+    # Methods to update and retrieve state...
+```
 
-        # LLM assistant context message
-        assist = f"""\nBEST_GUESSES:\n{str(BEST_GUESSES)}\n\nRECENT_PRIOR_GUESSES:\n{str(PRIOR_GUESSES)}\n"""
-        # LLM user message of the error and text of the guess
-        m = f"ERROR {VECTOR_ERROR:.4f}, \"{TEXT}\""
-        
-        if VECTOR_ERROR < CURRENT_BEST_ERROR:
-            CURRENT_BEST_TEXT = TEXT
-            CURRENT_BEST_ERROR = VECTOR_ERROR
-            logging.info("%s",f">>> New best text: \"{CURRENT_BEST_TEXT}\", error: {CURRENT_BEST_ERROR:.6f}")
-            BEST_GUESSES.append(m)
-            BEST_GUESSES.sort()
-            BEST_GUESSES = BEST_GUESSES[:3] # up to top 3
+We use a Ray actor to manage shared state across parallel processes, keeping track of the best guess, number of guesses made, and previous guesses.
 
-        if VECTOR_ERROR <= MATCH_ERROR:
-            break
+### 6. Crafting the Prompt for the LLM
 
-        while True:
-            try:
-                logging.info("%s",f"CHAT: {prompt}\n{assist}\n{m}\n")
-                res = ollama.chat(model=desiredModel, messages=[
-                    {
-                        'role': 'user',
-                        'content': "[INST]<<SYS>>"+prompt+"<</SYS>>\n\n\n[userinput]:\n"+m+"\n\n[/userinput][/INST] [context]\n"+assist+"\n[/context]",
-                    },
-                ])
-                if res['message']:
-                    break
-            except Exception as e_:
-                logging.error(e_)
-                time.sleep(5)
-        
-        # new text guess
-        TEXT = res['message']['content']
-        PRIOR_GUESSES.append(m)
-        logging.info("%s",f"{GUESSES_MADE:5d} {TEXT} {m}")
-        if len(PRIOR_GUESSES) > 8: # tune me
-            # Keep only last 8 guesses as context to control cost.
-            # This must be balanced against having too few recent
-            # guesses causing repeating of older guesses.
-            PRIOR_GUESSES = PRIOR_GUESSES[1:]
+```python
+prompt_template = f"""User input is last iterative guess of an unknown text string and its vector ERROR from the unknown text.
+Determine better text strings having lower vector ERRORs and write one such string in English as your entire output.
+The goal is to accurately guess the mystery text.
+This is a game of guess-and-check.
 
-    logging.info("%s",str(BEST_GUESSES))
+[clue]
+TWO WORDS; CLUE: FIRST WORD IS `Be`; SECOND WORD YOU HAVE TO GUESS.
+[/clue]
 
-demo()
-
-"""
-2024-11-14 03:01:01.446 [INFO] CHAT: User input is last iterative guess of an unknown text string and its vector ERROR from the unknown text.
-    Determine a better text string having a lower vector ERROR and write only that string in English as your entire output.
-    The goal is to accurately guess the mystery text. 
-    This is a game of guess-and-check. 
-
-
-    [clue]
-    TWO WORDS; CLUE: FIRST WORD IS `Be`; SECOND WORD YOU HAVE TO GUESS. RESPOND WITH EXACTLY TWO WORDS.
-    [/clue]
-
-    [RESPONSE CRITERIA]
-    - DO NOT REPEAT YOURSELF, CONSIDER `RECENT_PRIOR_GUESSES` and `BEST_GUESSES` PROVIDED IN [context] and `clue` when formulating your answer.
-    - RESPOND WITH COMPLETE GUESS. 2 WORD MAX.
-    - DO NOT REPEAT ANY OF THE `BEST_GUESSES` AND `RECENT_PRIOR_GUESSES` PROVIDED IN [context].
-    - DO NOT REPEAT YOURSELF, CONSIDER `RECENT_PRIOR_GUESSES` and `BEST_GUESSES` and `clue` when formulating your answer.
-    [/RESPONSE CRITERIA]
-    
-
-BEST_GUESSES:
-['ERROR 0.8794, ""Be aware""', 'ERROR 0.9279, ""Be kind""', 'ERROR 0.9480, ""Be respectful""']
-
-RECENT_PRIOR_GUESSES:
-['ERROR 0.9355, ""Be careful""', 'ERROR 0.9904, ""Be thankful""', 'ERROR 0.9809, ""Be courteous""', 'ERROR 0.9850, ""Be polite""', 'ERROR 0.9910, "Be happy"', 'ERROR 0.9047, ""Be cautious""', 'ERROR 0.9480, ""Be respectful""']
-
-ERROR 0.8794, ""Be aware""
-
-2024-11-14 03:01:01.705 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/chat "HTTP/1.1 200 OK"
-2024-11-14 03:01:01.707 [INFO]    57 "Be mindful" ERROR 0.8794, ""Be aware""
-2024-11-14 03:01:01.721 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/embed "HTTP/1.1 200 OK"
-2024-11-14 03:01:01.723 [INFO]    58 "Be mindful"
-2024-11-14 03:01:01.724 [INFO] >>> New best text: ""Be mindful"", error: 0.375072
-2024-11-14 03:01:01.724 [INFO] ['ERROR 0.3751, ""Be mindful""', 'ERROR 0.8794, ""Be aware""', 'ERROR 0.9279, ""Be kind""']
+[IMPORTANT]
+- Do NOT repeat any of the previous guesses provided in [context].
+- Do NOT include your thought process in your response.
+- Your response should be coherent and exactly two words.
+[/IMPORTANT]
 """
 ```
 
-### What's Happening Here?
+We create a prompt to guide the LLM in generating new guesses. The prompt includes:
 
-- **Initialization**: We set up the target text, initial guess, and parameters for the error thresholds.
-- **Iterative Loop**: The code enters a loop where it:
-  - Embeds the current guess.
-  - Calculates the error compared to the target embedding.
-  - Uses an LLM to generate a new, hopefully better guess.
-  - Updates the best guesses and prior attempts.
+- The last guess and its vector error.
+- Clues about the mystery text.
+- Instructions to avoid repeating previous guesses and to output only the guess.
 
-This process continues until the error is below a defined threshold or a cost limit is reached.
+### 7. Defining the Function to Generate and Evaluate Guesses
+
+```python
+@ray.remote
+def generate_and_evaluate_guess(v_target, shared_state_actor):
+    embeddings = OllamaEmbeddings(
+        model="nomic-embed-text",
+    )
+    # Retrieve current state and assist the LLM
+    # Generate a new guess using the LLM
+    # Compute the embedding of the new guess
+    # Calculate the vector error
+    # Update shared state if the new guess is better
+```
+
+This function:
+
+- Retrieves the current best guess and previous guesses.
+- Generates a new guess using the LLM.
+- Computes the embedding of the new guess.
+- Calculates the vector error between the new guess and the target.
+- Updates the shared state if the new guess is an improvement.
+
+### 8. Running the Main Loop
+
+```python
+# Main loop
+while (not ray.get(shared_state.is_match_found.remote()) and
+       ray.get(shared_state.get_state.remote())['TOTAL_COST'] < COST_LIMIT):
+    iteration_start_time = time.time()  # Start timing for this iteration
+
+    # Number of parallel guesses to generate
+    NUM_PARALLEL_GUESSES = 5
+
+    # Launch workers to generate guesses and compute errors in parallel
+    futures = [generate_and_evaluate_guess.remote(v_target, shared_state) for _ in range(NUM_PARALLEL_GUESSES)]
+    ray.get(futures)
+
+    # Get current state for logging
+    state = ray.get(shared_state.get_state.remote())
+    logging.info("Total guesses made: %d", state['GUESSES_MADE'])
+    logging.info("Current best guess: \"%s\" with error %.6f", state['CURRENT_BEST_TEXT'], state['CURRENT_BEST_ERROR'])
+
+    iteration_end_time = time.time()  # End timing for this iteration
+    iteration_elapsed = iteration_end_time - iteration_start_time
+    logging.info("Iteration execution time: %.2f seconds", iteration_elapsed)
+
+# After loop ends, print the best guess
+state = ray.get(shared_state.get_state.remote())
+logging.info("Best guess: \"%s\", error: %.6f", state['CURRENT_BEST_TEXT'], state['CURRENT_BEST_ERROR'])
+logging.info("Total guesses made: %d", state['GUESSES_MADE'])
+
+end_time = time.time()  # End time tracking
+elapsed_time = end_time - start_time
+logging.info("Total execution time: %.2f seconds", elapsed_time)
+```
+
+In the main loop:
+
+- We check if a match has been found or if the cost limit has been reached.
+- We run multiple instances of `generate_and_evaluate_guess` in parallel.
+- We log the progress after each iteration.
+
+### 9. Running the Script
+
+```python
+if __name__ == "__main__":
+    demo()
+```
+
+This triggers the execution of the `demo` function when the script is run.
+
+---
+
+## Results
+
+When we run the script, the following output is generated:
+
+```
+2024-11-14 23:11:57,785	INFO worker.py:1777 -- Started a local Ray instance. View the dashboard at 127.0.0.1:8265 
+2024-11-14 23:11:58.393 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/embed "HTTP/1.1 200 OK"
+2024-11-14 23:11:59.957 [INFO] Total guesses made: 5
+2024-11-14 23:11:59.958 [INFO] Current best guess: "Be Aware" with error 0.937819
+2024-11-14 23:11:59.958 [INFO] Iteration execution time: 1.45 seconds
+2024-11-14 23:12:00.551 [INFO] Total guesses made: 10
+2024-11-14 23:12:00.551 [INFO] Current best guess: "Be Mindful" with error 0.000000
+2024-11-14 23:12:00.551 [INFO] Iteration execution time: 0.59 seconds
+2024-11-14 23:12:00.553 [INFO] Best guess: "Be Mindful", error: 0.000000
+2024-11-14 23:12:00.553 [INFO] Total guesses made: 10
+2024-11-14 23:12:00.553 [INFO] Total execution time: 2.24 seconds
+```
+
+The script successfully reconstructs the mystery text `"Be mindful"` after 10 guesses within approximately 2.24 seconds. The error drops from an initial high value to `0.000000`, indicating an exact match.
+
+---
+
+This experiment demonstrates the potential of combining LLMs with embeddings and parallel computing to solve complex reverse-engineering tasks. By iteratively generating and evaluating guesses, we can effectively narrow down the possibilities and reconstruct the original text from its embedding.
+
+**Key Takeaways:**
+
+- **LLMs are powerful tools** for generating intelligent guesses based on context and prior attempts.
+- **Embeddings capture semantic meaning**, allowing us to compare texts numerically.
+- **Parallel computing with Ray** accelerates the process by evaluating multiple guesses simultaneously.
+- **Effective prompting and state management** are crucial for guiding the LLM and avoiding redundant guesses.
 
 ---
 
