@@ -338,3 +338,47 @@ As the field of NLP continues to advance, ongoing research and development will 
 ---
 
 **Note**: The code provided is for educational purposes and should be used responsibly. When handling sensitive data, always ensure compliance with privacy regulations and ethical guidelines.
+
+---
+
+# APPENDIX
+
+## Parallelization: Supercharging the Process
+
+The process of embedding inversion, particularly through bruteforcing, can be computationally expensive and time-consuming. It involves generating a large number of hypotheses and calculating the error between the target embedding and the embedding of each hypothesis. This iterative process continues until a satisfactory approximation of the target text is achieved or a predefined cost limit is reached.
+
+To accelerate the embedding inversion process, we leverage the power of Ray, a versatile framework for parallel and distributed computing. Ray enables us to efficiently distribute tasks across multiple machines or cores, significantly speeding up the generation and evaluation of guesses. 
+
+By parallelizing the process, we can simultaneously run multiple instances of the guess generation and evaluation function. This allows us to explore a wider range of possibilities and converge on the correct solution more quickly. 
+
+Ray's simplicity and scalability make it an ideal tool for tackling computationally intensive tasks like embedding inversion, where time and computational resources are critical factors. 
+
+### Pushing the Limits of Parallelization
+
+In our experiment, we pushed the limits of parallelization to see how it would impact the performance and efficiency of the process. We started with 50 parallel processes, which ran smoothly and significantly sped up the process. However, when we increased the number to 500, it put a significant strain on the system, causing it to rev up and almost crash. It was akin to a self-inflicted Distributed Denial of Service (DDoS) attack!
+
+We then tried running 100 parallel processes. While this did cause the system to heat up, it was able to handle the load and quickly found the solution. Here's the output from the run with 100 parallel processes:
+
+```
+2024-11-15 00:02:21,047	INFO worker.py:1777 -- Started a local Ray instance. View the dashboard at 127.0.0.1:8265 
+2024-11-15 00:02:21.648 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/embed "HTTP/1.1 200 OK"
+2024-11-15 00:02:35.761 [INFO] Total guesses made: 22
+2024-11-15 00:02:35.762 [INFO] Current best guess: "Be Mindful" with error 0.000000
+2024-11-15 00:02:35.762 [INFO] Iteration execution time: 13.98 seconds
+2024-11-15 00:02:35.763 [INFO] Best guess: "Be Mindful", error: 0.000000
+2024-11-15 00:02:35.763 [INFO] Total guesses made: 22
+2024-11-15 00:02:35.763 [INFO] Total execution time: 14.19 seconds
+```
+
+As you can see, the script successfully reconstructed the mystery text `"Be mindful"` after just 22 guesses within approximately 14.19 seconds. The error dropped from an initial high value to `0.000000`, indicating an exact match.
+
+This experiment demonstrates the power of parallelization in accelerating the process of embedding inversion. However, it also highlights the need for caution when pushing the limits of parallelization, as it can put a significant strain on the system and potentially lead to crashes or other issues.
+
+---
+
+**Key Takeaways:**
+
+- **Parallelization can significantly speed up the process** of embedding inversion by allowing multiple instances of the guess generation and evaluation function to run simultaneously.
+- **Ray is a powerful tool for parallel and distributed computing**, enabling efficient distribution of tasks across multiple machines or cores.
+- **Pushing the limits of parallelization can put a strain on the system**, so it's important to find the right balance to avoid crashes or other issues.
+- **Even with high levels of parallelization, the process can still be resource-intensive and time-consuming**, underscoring the need for efficient and optimized algorithms.
