@@ -337,6 +337,8 @@ By understanding these risks and implementing mitigation strategies like embeddi
 
 ## Embeddings
 
+![](https://miro.medium.com/v2/resize:fit:921/1*regQ0iSaBuRYsQgvEIn0FA.png)
+
 ### Why are Embeddings Important?
 
 Embeddings are crucial for several reasons:
