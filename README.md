@@ -48,6 +48,18 @@ To address these privacy concerns, researchers have proposed **embedding transfo
 
 These methods alter the embedding space in a way that preserves semantic relationships but makes it significantly harder to reconstruct the original text.
 
+While embedding transformation techniques offer promising solutions to mitigate privacy risks, they also come with their own set of challenges:
+
+1. **Loss of Information**: Transformation functions and dimensionality reduction can lead to a loss of information. While they obfuscate the original text, they may also inadvertently remove important semantic details, potentially affecting the performance of the model.
+
+2. **Increased Complexity**: The process of transforming embeddings adds an extra layer of complexity to the model. This can make the model more difficult to understand and interpret, and could potentially increase the computational resources required.
+
+3. **Noise Addition Trade-offs**: While adding noise can prevent exact inversion, it's a delicate balance. Too much noise can degrade the utility of the embeddings, while too little may not sufficiently protect against inversion. Finding the right balance can be challenging.
+
+4. **Effectiveness Against Advanced Attacks**: While these methods can make it harder to reconstruct the original text, they may not be completely effective against more advanced attacks. Sophisticated attackers may still be able to reverse-engineer the transformations or use other techniques to recover the original text.
+
+5. **Implementation Challenges**: Implementing these transformations in a consistent and effective manner across different models and datasets can be challenging. It requires careful planning and testing to ensure that the transformations do not adversely affect the model's performance.
+
 ---
 
 ## Reverse Engineering Embeddings: A Code Walkthrough
