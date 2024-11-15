@@ -105,6 +105,7 @@ We set up logging to monitor the process and define parameters such as the desir
 
 ```python
 # Encode the TARGET "mystery" vector to be reversed
+# (otherwise, fetch it from somewhere - like a vector database)
 TARGET = "Be mindful"
 
 embeddings = OllamaEmbeddings(
