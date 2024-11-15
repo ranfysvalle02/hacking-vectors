@@ -342,6 +342,32 @@ As the field of NLP continues to advance, ongoing research and development will 
 
 # APPENDIX
 
+## A Primer on Embeddings
+
+In the field of Natural Language Processing (NLP), embeddings are a critical component. They are a type of word representation that allows words with similar meanings to have similar representations. Essentially, embeddings are a way of converting text data into numerical form, making it easier for machine learning models to process and understand.
+
+### Why are Embeddings Important?
+
+Embeddings are crucial for several reasons:
+
+1. **Semantic Meaning**: Embeddings capture the semantic meaning of words and phrases, allowing machine learning models to understand the relationships between different words. For example, words like "dog" and "puppy" would have similar embeddings because they have similar meanings.
+
+2. **Dimensionality Reduction**: Text data can be extremely high-dimensional if each unique word is considered a separate dimension. Embeddings help reduce the dimensionality of the data by representing words in a lower-dimensional space.
+
+3. **Handling Unseen Words**: Embeddings can handle words that were not seen during training by creating a numerical representation based on the word's structure and context.
+
+### Types of Embeddings
+
+There are several types of embeddings, each with its own strengths and weaknesses:
+
+1. **Count-Based Embeddings (e.g., Bag of Words, TF-IDF)**: These embeddings represent words based on their frequency of occurrence. They are simple and easy to understand but do not capture the semantic meaning of words.
+
+2. **Predictive Embeddings (e.g., Word2Vec, GloVe)**: These embeddings are generated using neural networks trained to predict a word given its context (or vice versa). They capture semantic relationships between words but can be computationally expensive to train.
+
+3. **Contextual Embeddings (e.g., BERT, ELMo)**: These embeddings not only capture the semantic meaning of words but also take into account the context in which a word appears. This allows them to handle words with multiple meanings (polysemy).
+
+4. **Subword Embeddings (e.g., FastText, Trigram Hashing)**: These embeddings represent words as a combination of smaller units (like character n-grams). This allows them to handle out-of-vocabulary words and typos effectively.
+
 ## Parallelization: Supercharging the Process
 
 The process of embedding inversion, particularly through bruteforcing, can be computationally expensive and time-consuming. It involves generating a large number of hypotheses and calculating the error between the target embedding and the embedding of each hypothesis. This iterative process continues until a satisfactory approximation of the target text is achieved or a predefined cost limit is reached.
