@@ -88,8 +88,6 @@ To tackle this challenge, we'll use the following tools:
 
 ---
 
-## The Code Explained
-
 Let's dive into the code step by step.
 
 ### 1. Importing Libraries and Initializing Ray
