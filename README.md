@@ -64,6 +64,8 @@ While embedding transformation techniques offer promising solutions to mitigate 
 
 ## The Challenge of Sophisticated Attacks
 
+![](https://adcy.io/wp-content/uploads/2020/04/anti-hacking.gif)
+
 If an attacker can discern the pattern of transformation applied to the embeddings, they could potentially reverse-engineer the process, reconstructing the original embeddings and, subsequently, the original text.
 
 This is particularly concerning if the transformation process is deterministic and consistently applies the same transformation to the embeddings. Once the attacker understands the transformation function, they could apply the inverse of this function to the transformed embeddings to recover the original embeddings.
