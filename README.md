@@ -22,16 +22,6 @@ Embeddings are designed to capture the semantic essence of text. If someone can 
 
 ---
 
-**Ray: A Catalyst for Parallel Processing**
-
-To accelerate the embedding inversion process, we leverage the power of Ray, a versatile framework for parallel and distributed computing. Ray enables us to efficiently distribute tasks across multiple machines or cores, significantly speeding up the generation and evaluation of guesses. 
-
-By parallelizing the process, we can simultaneously run multiple instances of the guess generation and evaluation function. This allows us to explore a wider range of possibilities and converge on the correct solution more quickly. 
-
-Ray's simplicity and scalability make it an ideal tool for tackling computationally intensive tasks like embedding inversion, where time and computational resources are critical factors. 
-
----
-
 ## Privacy Risks in Dense Retrieval Systems
 
 Dense retrieval systems utilize embeddings to enhance search accuracy by capturing semantic similarities between queries and documents. However, their reliance on embeddings introduces potential vulnerabilities:
@@ -292,6 +282,14 @@ This experiment demonstrates the potential of combining LLMs with embeddings and
 The process of embedding inversion, particularly through bruteforcing, can be computationally expensive and time-consuming. It involves generating a large number of hypotheses and calculating the error between the target embedding and the embedding of each hypothesis. This iterative process continues until a satisfactory approximation of the target text is achieved or a predefined cost limit is reached.
 
 The resource-intensive nature of bruteforcing can pose challenges, especially when dealing with large datasets or complex models. It requires significant computational power and can lead to increased costs and longer processing times. Therefore, it's crucial to find ways to optimize this process and make it more efficient.
+
+**Ray: A Catalyst for Parallel Processing**
+
+To accelerate the embedding inversion process, we leverage the power of Ray, a versatile framework for parallel and distributed computing. Ray enables us to efficiently distribute tasks across multiple machines or cores, significantly speeding up the generation and evaluation of guesses. 
+
+By parallelizing the process, we can simultaneously run multiple instances of the guess generation and evaluation function. This allows us to explore a wider range of possibilities and converge on the correct solution more quickly. 
+
+Ray's simplicity and scalability make it an ideal tool for tackling computationally intensive tasks like embedding inversion, where time and computational resources are critical factors. 
 
 ---
 
