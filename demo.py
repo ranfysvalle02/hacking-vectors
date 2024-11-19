@@ -1,213 +1,335 @@
-import time
-import logging
 import numpy as np
-import ollama
+import faiss
 from langchain_ollama import OllamaEmbeddings
-import ray
+import nltk
+from nltk.tokenize import sent_tokenize, word_tokenize
+import requests
 
-def demo():
-    # Initialize Ray
-    ray.init()
+# demo setup
+import ollama
+desiredModel = 'llama3.2:3b'
 
-    start_time = time.time()  # Start time tracking
+def demo_string():
+    url = f"https://en.wikipedia.org/wiki/Puerto_Rico"
+    # Tokens: 218430
+    try:
+        response = requests.get(url)
+        response.raise_for_status()  # Raise an HTTPError for bad responses
+        print("Tokens:", len(word_tokenize(response.text)))
+        return response.text
+    except requests.exceptions.HTTPError as http_err:
+        print(f"HTTP error occurred: {http_err}")
+    except Exception as err:
+        print(f"An error occurred: {err}")
 
-    desiredModel = 'llama3.2:3b'
+# Define the CriticalVectors class
+class CriticalVectors:
+    """
+    A robust class to select the most relevant chunks from a text using various strategies,
+    """
 
-    logging.Formatter.default_msec_format = '%s.%03d'
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s [%(levelname)s] %(message)s",
-        handlers=[
-            logging.FileHandler("reverse_vector.log", 'w'),
-            logging.StreamHandler()
-        ]
-    )
+    def __init__(
+        self,
+        chunk_size=500,
+        strategy='kmeans',
+        num_clusters='auto',
+        embeddings_model=None,
+        split_method='sentences',
+        max_tokens_per_chunk=512,
+        use_faiss=False
+    ):
+        """
+        Initializes CriticalVectors.
 
-    # Encode the TARGET "mystery" vector to be reversed
-    # (otherwise, fetch it from somewhere - like a vector database)
-    TARGET = "Be mindful"
+        Parameters:
+        - chunk_size (int): Size of each text chunk in characters.
+        - strategy (str): Strategy to use for selecting chunks ('kmeans', 'agglomerative').
+        - num_clusters (int or 'auto'): Number of clusters (used in clustering strategies). If 'auto', automatically determine the number of clusters.
+        - embeddings_model: Embedding model to use. If None, uses OllamaEmbeddings with 'nomic-embed-text' model.
+        - split_method (str): Method to split text ('sentences', 'paragraphs').
+        - max_tokens_per_chunk (int): Maximum number of tokens per chunk when splitting.
+        - use_faiss (bool): Whether to use FAISS for clustering.
+        """
+        # Validate chunk_size
+        if not isinstance(chunk_size, int) or chunk_size <= 0:
+            raise ValueError("chunk_size must be a positive integer.")
+        self.chunk_size = chunk_size
 
-    embeddings = OllamaEmbeddings(
-        model="nomic-embed-text",
-    )
-    res = embeddings.embed_documents([TARGET])
-    v_target = np.array(res)
+        # Validate strategy
+        valid_strategies = ['kmeans', 'agglomerative']
+        if strategy not in valid_strategies:
+            raise ValueError(f"strategy must be one of {valid_strategies}.")
+        self.strategy = strategy
 
-    # Stop conditions
-    # MATCH_ERROR stop condition selection:
-    # https://en.wikipedia.org/wiki/68%E2%80%9395%E2%80%9399.7_rule
-    # https://www.hackmath.net/en/calculator/normal-distribution?mean=0&sd=1
-    # Because vector space has unit sigma = 1.0,
-    # a VECTOR_ERROR == |distance| <= 3.0 is a 99.7% confidence
-    # that the two points are distinct, or 0.3% that they are the same;
-    #
-    # Generally:
-    #   VECTOR_ERROR, Are-the-Same Match Confidence
-    #       3.0,         0.3%
-    #       2.0,         4.6%
-    #       1.0,        31.7%
-    #       0.667,      50.5%
-    #       0.6,        55.0%
-    #       0.5,        61.7%
-    #       0.333,      73.9%
-    #       0.2,        84%
-    #       0.1,        92%
-    #       0.01,       99.2%
-    MATCH_ERROR = 0.6  # 55% confidence or better
-    COST_LIMIT = 60.0  # $60 budget spent
+        # Validate num_clusters
+        if num_clusters != 'auto' and (not isinstance(num_clusters, int) or num_clusters <= 0):
+            raise ValueError("num_clusters must be a positive integer or 'auto'.")
+        self.num_clusters = num_clusters
 
-    @ray.remote
-    class SharedState:
-        def __init__(self):
-            self.CURRENT_BEST_TEXT = "Be"
-            self.CURRENT_BEST_ERROR = np.inf
-            self.GUESSES_MADE = 0
-            self.TOTAL_COST = 0.0
-            self.MATCH_FOUND = False
-            self.PREVIOUS_GUESSES = set()
+        # Set embeddings_model
+        if embeddings_model is None:
+            self.embeddings_model = OllamaEmbeddings(model="nomic-embed-text")
+        else:
+            self.embeddings_model = embeddings_model
 
-        def update_best_guess(self, text, error):
-            self.GUESSES_MADE += 1
-            self.PREVIOUS_GUESSES.add(text.lower())
-            if error < self.CURRENT_BEST_ERROR:
-                self.CURRENT_BEST_TEXT = text
-                self.CURRENT_BEST_ERROR = error
-                logging.info(">>> New best text: \"%s\", error: %.6f", text, error)
-            if error <= MATCH_ERROR:
-                self.MATCH_FOUND = True
+        # Set splitting method and max tokens per chunk
+        self.split_method = split_method
+        self.max_tokens_per_chunk = max_tokens_per_chunk
 
-        def get_state(self):
-            return {
-                'CURRENT_BEST_TEXT': self.CURRENT_BEST_TEXT,
-                'CURRENT_BEST_ERROR': self.CURRENT_BEST_ERROR,
-                'GUESSES_MADE': self.GUESSES_MADE,
-                'TOTAL_COST': self.TOTAL_COST,
-                'PREVIOUS_GUESSES': self.PREVIOUS_GUESSES
-            }
+        # Set FAISS usage
+        self.use_faiss = use_faiss
 
-        def is_match_found(self):
-            return self.MATCH_FOUND
+    
 
-    shared_state = SharedState.remote()
+    def split_text(self, text, method='sentences', max_tokens_per_chunk=512):
+        """
+        Splits the text into chunks based on the specified method.
 
-    # Prompt for the LLM
-    prompt_template = f"""User input is last iterative guess of an unknown text string and its vector ERROR from the unknown text.
-Determine better text strings having lower vector ERRORs and write one such string in English as your entire output.
-The goal is to accurately guess the mystery text.
-This is a game of guess-and-check.
+        Parameters:
+        - text (str): The input text to split.
+        - method (str): Method to split text ('sentences', 'paragraphs').
+        - max_tokens_per_chunk (int): Maximum number of tokens per chunk.
 
-[clue]
-TWO WORDS; CLUE: FIRST WORD IS `Be`; SECOND WORD YOU HAVE TO GUESS.
-[/clue]
+        Returns:
+        - List[str]: A list of text chunks.
+        """
+        # Validate text
+        if not isinstance(text, str) or len(text.strip()) == 0:
+            raise ValueError("text must be a non-empty string.")
 
-[IMPORTANT]
-- Do NOT repeat any of the previous guesses provided in [context].
-- Do NOT include your thought process in your response.
-- Your response should be coherent and exactly two words.
-[/IMPORTANT]
-"""
+        if method == 'sentences':
+            nltk.download('punkt', quiet=True)
+            sentences = sent_tokenize(text)
+            chunks = []
+            current_chunk = ''
+            current_tokens = 0
+            for sentence in sentences:
+                tokens = word_tokenize(sentence)
+                num_tokens = len(tokens)
+                if current_tokens + num_tokens <= max_tokens_per_chunk:
+                    current_chunk += ' ' + sentence
+                    current_tokens += num_tokens
+                else:
+                    chunks.append(current_chunk.strip())
+                    current_chunk = sentence
+                    current_tokens = num_tokens
+            if current_chunk:
+                chunks.append(current_chunk.strip())
+            return chunks
+        elif method == 'paragraphs':
+            paragraphs = text.split('\n\n')
+            chunks = []
+            current_chunk = ''
+            for para in paragraphs:
+                if len(current_chunk) + len(para) <= self.chunk_size:
+                    current_chunk += '\n\n' + para
+                else:
+                    chunks.append(current_chunk.strip())
+                    current_chunk = para
+            if current_chunk:
+                chunks.append(current_chunk.strip())
+            return chunks
+        else:
+            raise ValueError("Invalid method for splitting text.")
 
-    @ray.remote
-    def generate_and_evaluate_guess(v_target, shared_state_actor):
-        embeddings = OllamaEmbeddings(
-            model="nomic-embed-text",
-        )
+    def compute_embeddings(self, chunks):
+        """
+        Computes embeddings for each chunk.
+
+        Parameters:
+        - chunks (List[str]): List of text chunks.
+
+        Returns:
+        - np.ndarray: Embeddings of the chunks.
+        """
+        # Validate chunks
+        if not isinstance(chunks, list) or not chunks:
+            raise ValueError("chunks must be a non-empty list of strings.")
+
         try:
-            # Get the current best state
-            state = ray.get(shared_state_actor.get_state.remote())
-            assist = f"""\nBEST_GUESS: {state['CURRENT_BEST_TEXT']} (ERROR {state['CURRENT_BEST_ERROR']:.4f})"""
-            previous_guesses = state['PREVIOUS_GUESSES']
+            embeddings = self.embeddings_model.embed_documents(chunks)
+            embeddings = np.array(embeddings).astype('float32')  # FAISS requires float32
+            return embeddings
+        except Exception as e:
+            raise RuntimeError(f"Error computing embeddings: {e}")
 
-            # Include previous guesses in the context
-            if previous_guesses:
-                previous_guesses_str = ', '.join(f'"{guess}"' for guess in previous_guesses)
-                assist += f"\nPrevious guesses: {previous_guesses_str}"
+    def select_chunks(self, chunks, embeddings):
+        """
+        Selects the most relevant chunks based on the specified strategy.
+
+        Parameters:
+        - chunks (List[str]): List of text chunks.
+        - embeddings (np.ndarray): Embeddings of the chunks.
+
+        Returns:
+        - List[str]: Selected chunks.
+        """
+        num_chunks = len(chunks)
+        num_clusters = self.num_clusters
+
+        # Automatically determine number of clusters if set to 'auto'
+        if num_clusters == 'auto':
+            num_clusters = max(1, int(np.ceil(np.sqrt(num_chunks))))
+        else:
+            num_clusters = min(num_clusters, num_chunks)
+
+        if self.strategy == 'kmeans':
+            return self._select_chunks_kmeans(chunks, embeddings, num_clusters)
+        elif self.strategy == 'agglomerative':
+            return self._select_chunks_agglomerative(chunks, embeddings, num_clusters)
+        else:
+            # This should not happen due to validation in __init__
+            raise ValueError(f"Unknown strategy: {self.strategy}")
+
+    def _select_chunks_kmeans(self, chunks, embeddings, num_clusters):
+        """
+        Selects chunks using KMeans clustering.
+
+        Parameters:
+        - chunks (List[str]): List of text chunks.
+        - embeddings (np.ndarray): Embeddings of the chunks.
+        - num_clusters (int): Number of clusters.
+
+        Returns:
+        - List[str]: Selected chunks.
+        """
+        if self.use_faiss:
+            try:
+                d = embeddings.shape[1]
+                kmeans = faiss.Kmeans(d, num_clusters, niter=20, verbose=False)
+                kmeans.train(embeddings)
+                D, I = kmeans.index.search(embeddings, 1)
+                labels = I.flatten()
+            except Exception as e:
+                raise RuntimeError(f"Error in FAISS KMeans clustering: {e}")
+        else:
+            try:
+                from sklearn.cluster import KMeans
+                kmeans = KMeans(n_clusters=num_clusters, random_state=1337)
+                kmeans.fit(embeddings)
+                labels = kmeans.labels_
+            except Exception as e:
+                raise RuntimeError(f"Error in KMeans clustering: {e}")
+
+        # Find the closest chunk to each cluster centroid
+        try:
+            if self.use_faiss:
+                centroids = kmeans.centroids
+                index = faiss.IndexFlatL2(embeddings.shape[1])
+                index.add(embeddings)
+                D, closest_indices = index.search(centroids, 1)
+                closest_indices = closest_indices.flatten()
             else:
-                assist += "\nNo previous guesses."
+                from sklearn.metrics import pairwise_distances_argmin_min
+                closest_indices, _ = pairwise_distances_argmin_min(kmeans.cluster_centers_, embeddings)
+            selected_chunks = [chunks[idx] for idx in closest_indices]
+            return selected_chunks
+        except Exception as e:
+            raise RuntimeError(f"Error selecting chunks: {e}")
 
-            m = f"ERROR {state['CURRENT_BEST_ERROR']:.4f}, \"{state['CURRENT_BEST_TEXT']}\""
+    def _select_chunks_agglomerative(self, chunks, embeddings, num_clusters):
+        """
+        Selects chunks using Agglomerative Clustering.
 
-            # Call the assistant to get a new guess
-            while True:
-                try:
-                    logging.info("CHAT: Generating new guess with current best error %.4f", state['CURRENT_BEST_ERROR'])
-                    res = ollama.chat(model=desiredModel, messages=[
-                        {
-                            'role': 'user',
-                            'content': "[INST]<<SYS>>" + prompt_template + "\n\n\n [context]" + assist + "[/context] \n\n [user input]" + m + "[/user input]<</SYS>>[/INST]",
-                        },
-                    ])
-                    if res['message']:
-                        break
-                except Exception as e_:
-                    logging.error(e_)
-                    time.sleep(5)
+        Parameters:
+        - chunks (List[str]): List of text chunks.
+        - embeddings (np.ndarray): Embeddings of the chunks.
+        - num_clusters (int): Number of clusters.
 
-            # Extract the guess
-            TEXT = res['message']['content'].strip()
-            logging.info("Generated guess: \"%s\"", TEXT)
+        Returns:
+        - List[str]: Selected chunks.
+        """
+        try:
+            from sklearn.cluster import AgglomerativeClustering
+            clustering = AgglomerativeClustering(n_clusters=num_clusters)
+            labels = clustering.fit_predict(embeddings)
+        except Exception as e:
+            raise RuntimeError(f"Error in Agglomerative Clustering: {e}")
 
-            # Check for duplicates
-            if TEXT.lower() in previous_guesses:
-                logging.info("Duplicate guess detected: \"%s\"", TEXT)
-                return
+        selected_indices = []
+        for label in np.unique(labels):
+            cluster_indices = np.where(labels == label)[0]
+            cluster_embeddings = embeddings[cluster_indices]
+            centroid = np.mean(cluster_embeddings, axis=0).astype('float32').reshape(1, -1)
+            # Find the chunk closest to the centroid
+            if self.use_faiss:
+                index = faiss.IndexFlatL2(embeddings.shape[1])
+                index.add(cluster_embeddings)
+                D, I = index.search(centroid, 1)
+                closest_index_in_cluster = I[0][0]
+            else:
+                from sklearn.metrics import pairwise_distances_argmin_min
+                closest_index_in_cluster, _ = pairwise_distances_argmin_min(centroid, cluster_embeddings)
+                closest_index_in_cluster = closest_index_in_cluster[0]
+            selected_indices.append(cluster_indices[closest_index_in_cluster])
 
-            # Compute the error
-            res = embeddings.embed_documents([TEXT])
-            v_text = np.array(res)
-            dv = v_target - v_text
-            VECTOR_ERROR = np.sqrt((dv * dv).sum())
-            logging.info("Computed error for \"%s\": %.6f", TEXT, VECTOR_ERROR)
+        selected_chunks = [chunks[idx] for idx in selected_indices]
+        return selected_chunks
 
-            # Update the shared state if this is a better guess
-            shared_state_actor.update_best_guess.remote(TEXT, VECTOR_ERROR)
+    def get_relevant_chunks(self, text):
+        """
+        Gets the most relevant chunks from the text.
 
-        except Exception as e_:
-            logging.error("%s", e_)
+        Parameters:
+        - text (str): The input text.
 
-    # Main loop
-    while (not ray.get(shared_state.is_match_found.remote()) and
-           ray.get(shared_state.get_state.remote())['TOTAL_COST'] < COST_LIMIT):
-        iteration_start_time = time.time()  # Start timing for this iteration
+        Returns:
+        - List[str]: Selected chunks.
+        """
+        # Split the text into chunks
+        chunks = self.split_text(
+            text,
+            method=self.split_method,
+            max_tokens_per_chunk=self.max_tokens_per_chunk
+        )
 
-        # Number of parallel guesses to generate
-        NUM_PARALLEL_GUESSES = 50
+        if not chunks:
+            return [], '', ''
 
-        # Launch workers to generate guesses and compute errors in parallel
-        futures = [generate_and_evaluate_guess.remote(v_target, shared_state) for _ in range(NUM_PARALLEL_GUESSES)]
-        ray.get(futures)
+        # first part
+        first_part = chunks[0]
+        # last part
+        last_part = chunks[-1]
 
-        # Get current state for logging
-        state = ray.get(shared_state.get_state.remote())
-        logging.info("Total guesses made: %d", state['GUESSES_MADE'])
-        logging.info("Current best guess: \"%s\" with error %.6f", state['CURRENT_BEST_TEXT'], state['CURRENT_BEST_ERROR'])
+        # Compute embeddings for each chunk
+        embeddings = self.compute_embeddings(chunks)
 
-        iteration_end_time = time.time()  # End timing for this iteration
-        iteration_elapsed = iteration_end_time - iteration_start_time
-        logging.info("Iteration execution time: %.2f seconds", iteration_elapsed)
+        # Select the most relevant chunks
+        selected_chunks = self.select_chunks(chunks, embeddings)
+        return selected_chunks, first_part, last_part
 
-    # After loop ends, print the best guess
-    state = ray.get(shared_state.get_state.remote())
-    logging.info("Best guess: \"%s\", error: %.6f", state['CURRENT_BEST_TEXT'], state['CURRENT_BEST_ERROR'])
-    logging.info("Total guesses made: %d", state['GUESSES_MADE'])
-
-    end_time = time.time()  # End time tracking
-    elapsed_time = end_time - start_time
-    logging.info("Total execution time: %.2f seconds", elapsed_time)
+# Example usage:
 
 if __name__ == "__main__":
-    demo()
 
-"""
-2024-11-14 23:11:57,785	INFO worker.py:1777 -- Started a local Ray instance. View the dashboard at 127.0.0.1:8265 
-2024-11-14 23:11:58.393 [INFO] HTTP Request: POST http://127.0.0.1:11434/api/embed "HTTP/1.1 200 OK"
-2024-11-14 23:11:59.957 [INFO] Total guesses made: 5
-2024-11-14 23:11:59.958 [INFO] Current best guess: "Be Aware" with error 0.937819
-2024-11-14 23:11:59.958 [INFO] Iteration execution time: 1.45 seconds
-2024-11-14 23:12:00.551 [INFO] Total guesses made: 10
-2024-11-14 23:12:00.551 [INFO] Current best guess: "Be Mindful" with error 0.000000
-2024-11-14 23:12:00.551 [INFO] Iteration execution time: 0.59 seconds
-2024-11-14 23:12:00.553 [INFO] Best guess: "Be Mindful", error: 0.000000
-2024-11-14 23:12:00.553 [INFO] Total guesses made: 10
-2024-11-14 23:12:00.553 [INFO] Total execution time: 2.24 seconds
-"""
+    # Instantiate the selector
+    try:
+        selector = CriticalVectors(
+            strategy='kmeans',
+            num_clusters='auto',
+            chunk_size=1000,
+            split_method='sentences',
+            max_tokens_per_chunk=100,  # Adjust as needed
+            use_faiss=True  # Enable FAISS
+        )
+        test_str = demo_string()
+        # Get the most relevant chunks using the improved method
+        relevant_chunks, first_part, last_part = selector.get_relevant_chunks(test_str)
+        print(first_part)
+        print("======================")
+        for chunk in relevant_chunks:
+            print(chunk)
+        # Print the last part
+        print("======================")
+        print(last_part)
+        res = ollama.chat(model=desiredModel, messages=[
+            {
+                'role': 'user',
+                'content': "[INST]<<SYS>>" + "RESPOND WITH A SHORT SUMMARY OF THE [context]" + "\n\n\[context] beginning:\n{first_part} \n" + "\n".join(relevant_chunks) + "\n\nlast part:\n{last_part}\n[/context]<</SYS>>[/INST]",
+            },
+        ])
+        if res['message']:
+            print(res['message'])
+            exit()
+    except Exception as e:
+        print(f"An error occurred: {e}")
